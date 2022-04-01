@@ -5,8 +5,7 @@ def cic_stats(tree, n, r, seed=0):
     Args:
         tree (ckdtree): coordinates
         n (int): Num of spheres
-        r (float): Spheres radius
-        nran (int): Num of random points
+        r (float): Radius of the spheres
         seed (int, optional): Random seed. Defaults to 0.
 
     Returns:
@@ -16,18 +15,24 @@ def cic_stats(tree, n, r, seed=0):
     """
     import numpy as np
     from scipy import spatial
-    
+        
     np.random.seed(seed)
     # (b - a) * random_sample() + a
     spheres = (1-2*r)*np.random.rand(n,3)+r
-    spheres_tree = spatial.cKDTree(spheres)
+    #spheres_tree = spatial.cKDTree(spheres)
 
 
     #ngal: Num de gxs en cada esfera de radio r
-    ngal = [len(a) for a in spheres_tree.query_ball_tree(tree,r)] 
+    #ngal = [len(a) for a in spheres_tree.query_ball_tree(tree,r)] 
+
+    #Otra forma de obtener ngal:
+    ngal = np.zeros(n)
+    for k in range(n):
+        ngal[k] = len(tree.query_ball_point(spheres[k],r))
+
 
     #VPF
-    P0 = len(np.where(np.array(ngal)==0)[0])/n
+    P0 = len(np.where(ngal==0)[0])/n
 
     N_mean = np.mean(ngal)
 
@@ -45,7 +50,7 @@ def readTNG():
 
     """
     import sys
-    illustrisPath = '/home/fede/'
+    illustrisPath = '/home/fdavilakurban'
     basePath = '../../../TNG300-1/output/'
     sys.path.append(illustrisPath)
     import illustris_python as il
@@ -55,8 +60,6 @@ def readTNG():
     
     mass = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloMass'])                                                                                                                      
     ids = np.where((np.log10(mass)>-1.)&(np.log10(mass)<3.))
-    #if N_dilute!=0:
-    #    ids = random.choices(ids,k=N_dilute)
     mass = mass[ids]
 
     pos = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloPos'])
