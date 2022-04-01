@@ -12,7 +12,7 @@ print('Mean interparticle distance:',nran**(-1/3))
 print('Wigner-Seitz radius:',(3/(4*np.pi*nran))**(1/3))
 print('Testing radius:',r)
 
-ns = np.geomspace(10,50000,30)
+ns = np.geomspace(10,1000000,30)
 
 P0 = np.zeros(len(ns))
 N_mean = np.zeros(len(ns))
@@ -68,6 +68,6 @@ ax3.scatter(ns,xi_mean)
 ax3.set_xlabel('Num. of spheres')
 ax3.set_ylabel(r'$\bar{\xi}(R)$')
 ax3.set_xscale('log')
-#plt.savefig('../plots/P0_stability.png')
+plt.savefig('../plots/stability_randoms.png')
 plt.show()
 # %%

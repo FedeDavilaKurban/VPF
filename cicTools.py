@@ -35,3 +35,34 @@ def cic_stats(tree, n, r, seed=0):
     xi_mean = (np.mean((ngal-N_mean)**2)-N_mean)/N_mean**2
     
     return P0, N_mean, xi_mean
+
+
+def readTNG():
+    """
+    Read subhalos/galaxies in the TNG300-1 simulation 
+
+    gxs: an ascii Table with the fields and filters I usually need for this: Position, Mass, Spin
+
+    """
+    import sys
+    illustrisPath = '/home/fede/'
+    basePath = '../../../TNG300-1/output/'
+    sys.path.append(illustrisPath)
+    import illustris_python as il
+    import numpy as np
+    from astropy.table import Table
+    import random 
+    
+    mass = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloMass'])                                                                                                                      
+    ids = np.where((np.log10(mass)>-1.)&(np.log10(mass)<3.))
+    #if N_dilute!=0:
+    #    ids = random.choices(ids,k=N_dilute)
+    mass = mass[ids]
+
+    pos = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloPos'])
+    pos = pos[ids]
+
+    gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2],mass]),names=['x','y','z','mass'])    
+    del mass,pos
+
+    return gxs
