@@ -1,5 +1,5 @@
 
-def cic_stats(tree, n, r, seed=0):
+def cic_stats(tree, n, r, lbox):
     """Returns Counts in Cells statistics
 
     Args:
@@ -16,9 +16,8 @@ def cic_stats(tree, n, r, seed=0):
     import numpy as np
     from scipy import spatial
         
-    np.random.seed(seed)
     # (b - a) * random_sample() + a
-    spheres = (1-2*r)*np.random.rand(n,3)+r
+    spheres = (lbox-2*r)*np.random.rand(n,3)+r
     #spheres_tree = spatial.cKDTree(spheres)
 
 
@@ -39,6 +38,8 @@ def cic_stats(tree, n, r, seed=0):
     #xi_mean
     xi_mean = (np.mean((ngal-N_mean)**2)-N_mean)/N_mean**2
     
+    del ngal
+    
     return P0, N_mean, xi_mean
 
 
@@ -50,7 +51,7 @@ def readTNG():
 
     """
     import sys
-    illustrisPath = '/home/fdavilakurban'
+    illustrisPath = '/home/fede'
     basePath = '../../../TNG300-1/output/'
     sys.path.append(illustrisPath)
     import illustris_python as il
@@ -65,7 +66,9 @@ def readTNG():
     pos = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloPos'])
     pos = pos[ids]
 
-    gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2],mass]),names=['x','y','z','mass'])    
+    #gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2],mass]),names=['x','y','z','mass'])    
+    gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2]]),names=['x','y','z'])    
+    
     del mass,pos
 
     return gxs
