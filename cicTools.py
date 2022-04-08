@@ -66,9 +66,13 @@ def readTNG():
     pos = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloPos'])
     pos = pos[ids]
 
+    vel = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloVel'])
+    vel = vel[ids]
+
+
     #gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2],mass]),names=['x','y','z','mass'])    
-    gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2]]),names=['x','y','z'])    
+    gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2],vel[:,0],vel[:,1],vel[:,2]]),names=['x','y','z','vx','vy','vz'])    
     
-    del mass,pos
+    del mass,pos,vel
 
     return gxs

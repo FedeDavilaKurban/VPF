@@ -11,15 +11,24 @@ lbox = 205000
 N_tot = 100000
 
 gxs = readTNG()
+np.random.seed(0)
 ids = np.random.choice(len(gxs),size=N_tot)
 gxs = gxs[ids]
 ntot = len(gxs)
 
+#%%
+H0 = 67.74
+axis = 'z'
+vaxis = 'vz'
+gxs[axis]+=gxs[vaxis]/H0
+gxs[axis][np.where(gxs[axis]<0.)[0]]+=lbox
+gxs[axis][np.where(gxs[axis]>lbox)[0]]-=lbox
+
 pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
 
 tree = spatial.cKDTree(pos)
-#%%
-rs = np.geomspace(1000,9000,5)
+
+rs = np.geomspace(1000,8000,5)
 n = 100000
 
 P0 = np.zeros(len(rs))
@@ -54,7 +63,7 @@ for i,r in enumerate(rs):
 
 chi_ran = -np.log(P0_ran)/Nmean_ran
 NE_ran = Nmean_ran*ximean_ran
-
+#%%
 x = np.geomspace(1E-3,1E3,50)
 plt.plot(x,np.log(1+x)/x)
 plt.scatter(NE_ran,chi_ran)
