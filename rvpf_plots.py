@@ -54,6 +54,7 @@ plt.show()
 
 #%%
 x = np.geomspace(1E-2,1E2,50)
+n = 100000
 c='k'
 plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
 a=.3
@@ -73,7 +74,7 @@ for ngxs in [10000,100000,1000000]:
     chi = -np.log(P0)/N_mean
     NE = N_mean*xi_mean
 
-    plt.plot(NE,chi,ls='-',label=n)
+    plt.plot(NE,chi,ls='-',label=ngxs)
 
 plt.xscale('log')   
 plt.legend(loc=3)
