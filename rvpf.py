@@ -3,32 +3,39 @@ import numpy as np
 import matplotlib.pyplot as plt
 from cicTools import *
 from scipy import spatial
-import random 
+import configparser
+#%%
+config = configparser.ConfigParser()
 
-lbox = 205000
-
-ngxs = 1000000
+seed = float(config['PARAMS']['seed'])
+lbox = float(config['PARAMS']['lbox'])
+ngxs = float(config['PARAMS']['ngxs'])
+zspace = bool(config['PARAMS']['rspace'])
+zspaceAxis = config['PARAMS']['rspaceAxis']
 
 gxs = readTNG()
-np.random.seed(0)
+np.random.seed(seed)
 ids = np.random.choice(len(gxs),size=ngxs)
 gxs = gxs[ids]
-#ntot = len(gxs)
 
-# H0 = 67.74
-# axis = 'y'
-# vaxis = 'v'+axis
-# gxs[axis]+=gxs[vaxis]/H0
-# gxs[axis][np.where(gxs[axis]<0.)[0]]+=lbox
-# gxs[axis][np.where(gxs[axis]>lbox)[0]]-=lbox
+if zspace == True:
+    H0 = 67.74
+    axis = zspaceAxis
+    vaxis = 'v'+axis
+    gxs[axis]+=gxs[vaxis]/H0
+    gxs[axis][np.where(gxs[axis]<0.)[0]]+=lbox
+    gxs[axis][np.where(gxs[axis]>lbox)[0]]-=lbox
 
 pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
 
 tree = spatial.cKDTree(pos)
 #%%
 
-rs = np.geomspace(100,6000,20)
-nesf = 100000
+rsmin = float(config['PARAMS']['rsmin'])
+rsmax = float(config['PARAMS']['rsmax'])
+rsbin = float(config['PARAMS']['rsbin'])
+rs = np.geomspace(rsmin,rsmax,rsbin)
+nesf = float(config['PARAMS']['nesf'])
 
 P0 = np.zeros(len(rs))
 N_mean = np.zeros(len(rs))
