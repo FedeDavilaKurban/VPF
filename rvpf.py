@@ -45,7 +45,10 @@ for i,r in enumerate(rs):
     P0[i], N_mean[i], xi_mean[i] = cic_stats(tree, nesf, r, lbox)
     
 
-namefile = f'../data/ngxs{ngxs}_nesf{nesf}.npz'
+if zspace==True: 
+    namefile = f'../data/ngxs{ngxs}_nesf{nesf}_redshift{axis}.npz'
+else: 
+    namefile = f'../data/ngxs{ngxs}_nesf{nesf}.npz'
 np.savez(namefile,P0,N_mean,xi_mean,rs)
 
 x = np.geomspace(1E-2,1E2,50)
