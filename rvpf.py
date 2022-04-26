@@ -7,11 +7,12 @@ import configparser
 #%%
 config = configparser.ConfigParser()
 
-seed = float(config['PARAMS']['seed'])
-lbox = float(config['PARAMS']['lbox'])
-ngxs = float(config['PARAMS']['ngxs'])
-zspace = bool(config['PARAMS']['rspace'])
-zspaceAxis = config['PARAMS']['rspaceAxis']
+seed = float(config['PARAMS']['seed']) #random seed
+lbox = float(config['PARAMS']['lbox']) #length of box
+ngxs = float(config['PARAMS']['ngxs']) #num of galaxies
+zspace = bool(config['PARAMS']['rspace']) #redshift space
+zspaceAxis = config['PARAMS']['rspaceAxis'] #r-space axis
+nesf = float(config['PARAMS']['nesf']) #num of test spheres
 
 gxs = readTNG()
 np.random.seed(seed)
@@ -31,11 +32,21 @@ pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
 tree = spatial.cKDTree(pos)
 #%%
 
-rsmin = float(config['PARAMS']['rsmin'])
-rsmax = float(config['PARAMS']['rsmax'])
-rsbin = float(config['PARAMS']['rsbin'])
-rs = np.geomspace(rsmin,rsmax,rsbin)
-nesf = float(config['PARAMS']['nesf'])
+"""
+Voy probando rangos de radio para calcular chi
+Radio mínimo: tal que en el eje x (xi*Nmean) me de alrededor de 0.1
+Radio maximo: tal que la chi no me de -inf
+Estos depende del tamaño de la muestra (ngxs)
+
+rs range for ngxs=10000: np.geomspace(1500,16000,x)
+rs range for ngxs=100000: np.geomspace(500,9000,x)
+rs range for ngxs=1000000: np.geomspace(200,5000,x)
+"""
+
+if ngxs==1000000: rs = np.geomspace(200,5000,20)
+elif ngxs==100000: rs = np.geomspace(500,9000,20)
+elif ngxs==10000: rs = np.geomspace(1500,16000,20)
+
 
 P0 = np.zeros(len(rs))
 N_mean = np.zeros(len(rs))
