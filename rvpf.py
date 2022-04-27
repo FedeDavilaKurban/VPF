@@ -4,15 +4,26 @@ import matplotlib.pyplot as plt
 from cicTools import *
 from scipy import spatial
 import configparser
-#%%
-config = configparser.ConfigParser()
 
-seed = float(config['PARAMS']['seed']) #random seed
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+seed = int(config['PARAMS']['seed']) #random seed
 lbox = float(config['PARAMS']['lbox']) #length of box
-ngxs = float(config['PARAMS']['ngxs']) #num of galaxies
-zspace = bool(config['PARAMS']['rspace']) #redshift space
-zspaceAxis = config['PARAMS']['rspaceAxis'] #r-space axis
-nesf = float(config['PARAMS']['nesf']) #num of test spheres
+ngxs = int(config['PARAMS']['ngxs']) #num of galaxies
+zspace = config['PARAMS'].getboolean('zspace') #redshift space
+zspaceAxis = config['PARAMS']['zspaceAxis'] #r-space axis
+nesf = int(config['PARAMS']['nesf']) #num of test spheres
+rsbin = int(config['PARAMS']['rsbin']) #num of bins of r
+
+print(f"""
+      ngxs = {ngxs}
+      nesf = {nesf}
+      zspace = {zspace}
+      zspaceAxis = {zspaceAxis}
+      """)
+
+#%%
 
 gxs = readTNG()
 np.random.seed(seed)
@@ -20,7 +31,7 @@ ids = np.random.choice(len(gxs),size=ngxs)
 gxs = gxs[ids]
 
 if zspace == True:
-    H0 = 67.74
+    H0 = .06774
     axis = zspaceAxis
     vaxis = 'v'+axis
     gxs[axis]+=gxs[vaxis]/H0
@@ -35,17 +46,23 @@ tree = spatial.cKDTree(pos)
 """
 Voy probando rangos de radio para calcular chi
 Radio mínimo: tal que en el eje x (xi*Nmean) me de alrededor de 0.1
-Radio maximo: tal que la chi no me de -inf
+Radio maximo: tal que la chi no me de -inf*
 Estos depende del tamaño de la muestra (ngxs)
+
+*tambien sucede que si rmax es muy grande P0 es muy chico, y ln(P0)
+crece asintoticamente
 
 rs range for ngxs=10000: np.geomspace(1500,16000,x)
 rs range for ngxs=100000: np.geomspace(500,9000,x)
 rs range for ngxs=1000000: np.geomspace(200,5000,x)
 """
 
-if ngxs==1000000: rs = np.geomspace(200,5000,20)
-elif ngxs==100000: rs = np.geomspace(500,9000,20)
-elif ngxs==10000: rs = np.geomspace(1500,16000,20)
+if ngxs==10000000: rs = np.geomspace(30,5000,rsbin) 
+elif ngxs==1000000: rs = np.geomspace(190,5800,rsbin)
+elif ngxs==100000: rs = np.geomspace(800,9100,rsbin)
+elif ngxs==10000: rs = np.geomspace(2000,17100,rsbin)
+elif ngxs==1000: rs = np.geomspace(7000,27800,rsbin)
+#elif ngxs==10000: rs = np.geomspace(1500,16000,20)
 
 
 P0 = np.zeros(len(rs))
