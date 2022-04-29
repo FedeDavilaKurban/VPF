@@ -14,13 +14,15 @@ ngxs = int(config['PARAMS']['ngxs']) #num of galaxies
 zspace = config['PARAMS'].getboolean('zspace') #redshift space
 zspaceAxis = config['PARAMS']['zspaceAxis'] #r-space axis
 nesf = int(config['PARAMS']['nesf']) #num of test spheres
-rsbin = int(config['PARAMS']['rsbin']) #num of bins of r of the spheres
+rsbin = int(config['PARAMS']['rsbin']) #num of bins of r
+jk = int(config['PARAMS']['jk']) #num of bins of r
 
 print(f"""
       ngxs = {ngxs}
       nesf = {nesf}
       zspace = {zspace}
       zspaceAxis = {zspaceAxis}
+      Num of JK resamplings = {jk}^3
       """)
 
 #%%
@@ -65,9 +67,14 @@ tree = spatial.cKDTree(pos)
 P0 = np.zeros(len(rs))
 N_mean = np.zeros(len(rs))
 xi_mean = np.zeros(len(rs))
+P0_std = np.zeros(len(rs))
+N_mean_std = np.zeros(len(rs))
+xi_mean_std = np.zeros(len(rs))
 
 for i,r in enumerate(rs):
-    P0[i], N_mean[i], xi_mean[i] = cic_stats(tree, nesf, r, lbox)
+    P0[i], N_mean[i], xi_mean[i],\
+        P0_std[i], N_mean_std[i], xi_mean_std[i]\
+            = cic_stats_jk(tree, nesf, r, lbox, jk)
 
 ##########
 # Writing
@@ -78,9 +85,9 @@ else:
     namefile = f'../data/allgxs_nesf{nesf}'
 if zspace==True: 
     namefile += f'_redshift{axis}'
-namefile += '.npz'
+namefile += '_jk.npz'
 print(f'Creating {namefile}')
-np.savez(namefile,P0,N_mean,xi_mean,rs)
+np.savez(namefile,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
 
 
 # x = np.geomspace(1E-2,1E3,50)

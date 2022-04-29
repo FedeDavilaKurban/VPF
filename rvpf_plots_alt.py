@@ -30,7 +30,7 @@ plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
 Q=1
 #plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
 
-plt.scatter(NE,chi,lw=3)
+plt.scatter(NE,chi,lw=3,label=f'ngxs={ntot}')
 
 
 ntot = 10000
@@ -46,7 +46,7 @@ rs = stats['arr_3']
 chi = -np.log(P0)/N_mean
 NE = N_mean*xi_mean
 
-plt.scatter(NE,chi,lw=3)
+plt.scatter(NE,chi,lw=3,label=f'ngxs={ntot}')
 
 plt.xscale('log')
 plt.legend(loc=3)
@@ -66,7 +66,7 @@ a=.3
 plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
 plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
 
-for ngxs in [10000,100000,1000000]:
+for ngxs in [1000,10000,100000,1000000,10000000]:
     
     namefile = f'../data/ngxs{ngxs}_nesf{n}.npz'
     stats = np.load(namefile)
@@ -79,7 +79,7 @@ for ngxs in [10000,100000,1000000]:
     chi = -np.log(P0)/N_mean
     NE = N_mean*xi_mean
 
-    plt.plot(NE,chi,ls='-',label=ngxs)
+    plt.scatter(NE,chi,ls='-',label=ngxs)
 
 plt.xscale('log')   
 plt.legend(loc=3)
@@ -98,7 +98,7 @@ a=.3
 plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
 plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
 
-for ngxs in [10000,100000,1000000]:
+for ngxs in [1000,10000,100000,1000000,10000000]:
     
     namefile = f'../data/ngxs{ngxs}_nesf{n}_redshiftx.npz'
     stats = np.load(namefile)
@@ -111,7 +111,7 @@ for ngxs in [10000,100000,1000000]:
     chi = -np.log(P0)/N_mean
     NE = N_mean*xi_mean
 
-    plt.plot(NE,chi,ls='-',label=ngxs)
+    plt.scatter(NE,chi,ls='-',label=ngxs)
 
 plt.xscale('log')   
 plt.legend(loc=3)
@@ -208,8 +208,10 @@ a=.3
 plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
 plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
 
+ngxss = [1000,10000,100000]
+
 c='b'
-for ngxs in [10000,100000,1000000]:
+for ngxs in ngxss:
     
     namefile = f'../data/ngxs{ngxs}_nesf{n}.npz'
     stats = np.load(namefile)
@@ -225,7 +227,7 @@ for ngxs in [10000,100000,1000000]:
     plt.plot(NE,chi,ls='-',c=c)#,label=ngxs)
     
 c='r'
-for ngxs in [10000,100000,1000000]:
+for ngxs in ngxss:
     
     namefile = f'../data/ngxs{ngxs}_nesf{n}_redshiftx.npz'
     stats = np.load(namefile)
