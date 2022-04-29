@@ -24,6 +24,26 @@ print(f"""
       """)
 
 #%%
+"""
+Voy probando rangos de radio para calcular chi
+Radio mínimo: tal que en el eje x (xi*Nmean) me de alrededor de 0.1
+Radio maximo: tal que la chi no me de inf*
+Estos depende del tamaño de la muestra (ngxs)
+
+*tambien sucede que si rmax es muy grande P0 es muy chico, y ln(P0)
+crece asintoticamente
+
+rs range for ngxs=10000: np.geomspace(1500,16000,x)
+rs range for ngxs=100000: np.geomspace(500,9000,x)
+rs range for ngxs=1000000: np.geomspace(200,5000,x)
+"""
+
+if ngxs==10000000: rs = np.geomspace(30,5000,rsbin) 
+elif ngxs==1000000: rs = np.geomspace(190,5800,rsbin)
+elif ngxs==100000: rs = np.geomspace(800,9100,rsbin)
+elif ngxs==10000: rs = np.geomspace(2000,17100,rsbin)
+elif ngxs==1000: rs = np.geomspace(7000,27800,rsbin)
+#%%
 
 gxs = readTNG()
 np.random.seed(seed)
@@ -41,30 +61,8 @@ if zspace == True:
 pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
 
 tree = spatial.cKDTree(pos)
+
 #%%
-
-"""
-Voy probando rangos de radio para calcular chi
-Radio mínimo: tal que en el eje x (xi*Nmean) me de alrededor de 0.1
-Radio maximo: tal que la chi no me de -inf*
-Estos depende del tamaño de la muestra (ngxs)
-
-*tambien sucede que si rmax es muy grande P0 es muy chico, y ln(P0)
-crece asintoticamente
-
-rs range for ngxs=10000: np.geomspace(1500,16000,x)
-rs range for ngxs=100000: np.geomspace(500,9000,x)
-rs range for ngxs=1000000: np.geomspace(200,5000,x)
-"""
-
-if ngxs==10000000: rs = np.geomspace(30,5000,rsbin) 
-elif ngxs==1000000: rs = np.geomspace(190,5800,rsbin)
-elif ngxs==100000: rs = np.geomspace(800,9100,rsbin)
-elif ngxs==10000: rs = np.geomspace(2000,17100,rsbin)
-elif ngxs==1000: rs = np.geomspace(7000,27800,rsbin)
-#elif ngxs==10000: rs = np.geomspace(1500,16000,20)
-
-
 P0 = np.zeros(len(rs))
 N_mean = np.zeros(len(rs))
 xi_mean = np.zeros(len(rs))
@@ -79,22 +77,23 @@ else:
     namefile = f'../data/ngxs{ngxs}_nesf{nesf}.npz'
 np.savez(namefile,P0,N_mean,xi_mean,rs)
 
-x = np.geomspace(1E-2,1E2,50)
-c='k'
-chi = -np.log(P0)/N_mean
-NE = N_mean*xi_mean
+#%%
+# x = np.geomspace(1E-2,1E2,50)
+# c='k'
+# chi = -np.log(P0)/N_mean
+# NE = N_mean*xi_mean
 
-plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
-a=.3
-plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
-#plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
-plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
-#plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
-# Q=1
-# plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
+# plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
+# a=.3
+# plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
+# #plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
+# plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
+# #plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
+# # Q=1
+# # plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
 
-plt.scatter(NE,chi,lw=2)
-plt.xscale('log')
-plt.legend(loc=3)
-plt.show()
-# %%
+# plt.scatter(NE,chi,lw=2)
+# plt.xscale('log')
+# plt.legend(loc=3)
+# plt.show()
+# # %%

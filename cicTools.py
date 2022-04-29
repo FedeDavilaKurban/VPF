@@ -15,9 +15,11 @@ def cic_stats(tree, n, r, lbox):
     """
     import numpy as np
     from scipy import spatial
-        
+    
+    a = r
+    b = lbox - r    
     # (b - a) * random_sample() + a
-    spheres = (lbox-2*r)*np.random.rand(n,3)+r
+    spheres = (b-a)*np.random.rand(n,3) + a
     #spheres_tree = spatial.cKDTree(spheres)
 
 
