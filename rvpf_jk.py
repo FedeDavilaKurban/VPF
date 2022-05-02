@@ -64,17 +64,22 @@ pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
 
 tree = spatial.cKDTree(pos)
 
+chi = np.zeros(len(rs))
+NXi = np.zeros(len(rs))
 P0 = np.zeros(len(rs))
 N_mean = np.zeros(len(rs))
 xi_mean = np.zeros(len(rs))
+
+chi_std = np.zeros(len(rs))
+NXi_std = np.zeros(len(rs))
 P0_std = np.zeros(len(rs))
 N_mean_std = np.zeros(len(rs))
 xi_mean_std = np.zeros(len(rs))
 
 for i,r in enumerate(rs):
-    P0[i], N_mean[i], xi_mean[i],\
-        P0_std[i], N_mean_std[i], xi_mean_std[i]\
-            = cic_stats_jk(tree, nesf, r, lbox, jk)
+    chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
+            chi_std[i], NXi_std[i], P0_std[i], N_mean_std[i], xi_mean_std[i]\
+                = cic_stats_jk(tree, nesf, r, lbox, jk)
 
 ##########
 # Writing
@@ -87,7 +92,7 @@ if zspace==True:
     namefile += f'_redshift{axis}'
 namefile += '_jk.npz'
 print(f'Creating {namefile}')
-np.savez(namefile,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
+np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
 
 
 # x = np.geomspace(1E-2,1E3,50)

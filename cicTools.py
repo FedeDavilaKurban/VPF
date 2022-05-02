@@ -53,7 +53,7 @@ def readTNG():
 
     """
     import sys
-    illustrisPath = '/home/fdavilakurban'
+    illustrisPath = '/home/fede'
     basePath = '../../../TNG300-1/output/'
     sys.path.append(illustrisPath)
     import illustris_python as il
@@ -107,6 +107,9 @@ def cic_stats_jk(tree, n, r, lbox, jkbins):
     P0_jk = np.zeros((jkbins,jkbins,jkbins))
     N_mean_jk = np.zeros((jkbins,jkbins,jkbins))
     xi_mean_jk = np.zeros((jkbins,jkbins,jkbins))
+    chi_jk = np.zeros((jkbins,jkbins,jkbins))
+    NXi_jk = np.zeros((jkbins,jkbins,jkbins))
+
     for k in range(jkbins):
         mask_z2 = (spheres[:,0] < rbins[k+1])
         mask_z1 = (spheres[:,0] > rbins[k])        
@@ -142,6 +145,10 @@ def cic_stats_jk(tree, n, r, lbox, jkbins):
 
                 #xi_mean
                 xi_mean_jk[i,j,k] = (np.mean((ngal-N_mean_jk[i,j,k])**2)-N_mean_jk[i,j,k])/N_mean_jk[i,j,k]**2
+                
+                chi_jk[i,j,k] = -np.log(P0_jk[i,j,k])/N_mean_jk[i,j,k]
+                
+                NXi_jk[i,j,k] = N_mean_jk[i,j,k]*xi_mean_jk[i,j,k]
     
     P0 = np.mean(P0_jk.flat)
     P0_std = np.std(P0_jk.flat,ddof=1)
@@ -152,6 +159,13 @@ def cic_stats_jk(tree, n, r, lbox, jkbins):
     xi_mean = np.mean(xi_mean_jk.flat)
     xi_mean_std = np.std(xi_mean_jk.flat,ddof=1)
 
-    del ngal, P0_jk, N_mean_jk, xi_mean_jk
+    chi = np.mean(chi_jk.flat)
+    chi_std = np.std(chi_jk.flat,ddof=1)
+
+    NXi = np.mean(NXi_jk.flat)
+    NXi_std = np.std(NXi_jk.flat,ddof=1)
+
+    del ngal, P0_jk, N_mean_jk, xi_mean_jk, chi_jk, NXi_jk
     
-    return P0, N_mean, xi_mean, P0_std, N_mean_std, xi_mean_std 
+    return chi, NXi, P0, N_mean, xi_mean, \
+        chi_std, NXi_std, P0_std, N_mean_std, xi_mean_std 
