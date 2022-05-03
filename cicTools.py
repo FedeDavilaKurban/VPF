@@ -49,7 +49,8 @@ def readTNG():
     """
     Read subhalos/galaxies in the TNG300-1 simulation 
 
-    gxs: an ascii Table with the fields and filters I usually need for this: Position, Mass, Spin
+    Returns:
+        ascii Table: gxs (Position, Mass, Velocity)
 
     """
     import sys
@@ -80,7 +81,8 @@ def readTNG():
     return gxs
 
 def cic_stats_jk(tree, n, r, lbox, jkbins):
-    """Returns Counts in Cells statistics
+    """
+    Returns Counts in Cells statistics with Jackknife resampling
 
     Args:
         tree (ckdtree): coordinates
@@ -90,9 +92,13 @@ def cic_stats_jk(tree, n, r, lbox, jkbins):
         jkbins (int): Num. of divisions per axis for JK resampling
 
     Returns:
+        Jackknife Mean and Standard Dev.:
+        float: Reduced VPF
+        float: Scaling Variable (<N>*<Xi>)
         float: VPF
-        float: Mean number of points in spheres of radius r
-        float: Averaged 2pcf (variance of counts in cells)
+        float: Mean number of points in spheres of radius r (<N>)
+        float: Averaged 2pcf (variance of counts in cells, <Xi>)
+
     """
     import numpy as np
     from scipy import spatial

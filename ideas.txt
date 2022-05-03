@@ -1,0 +1,13 @@
+- Diluir N
+El plot de mi charla en la Cosmic Web parece indicar que dentro
+del void el clustering es jerárquico, pero afuera no
+
+- Calcualr VPF con cortes en masa
+Las gxs dentro de los voids son mayoritatiamente de baja masa.
+Si estas gxs tienen un clustering distinto a las de baja masa 
+en todo el box, entonces hay algo especial en los voids que mantiene
+la jerarquía de clustering
+
+- Calcular VPF con distintas definiciones de void
+Identificar voids con todas las gxs (10**9-10**13Msun) y con 
+un corte mayor (10**11-10**13Msun) y rellenar después.
