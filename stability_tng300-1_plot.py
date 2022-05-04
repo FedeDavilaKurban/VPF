@@ -5,14 +5,14 @@ from cicTools import *
 from scipy import spatial
 import random 
 
-r = 5500
+r = 550
 lbox = 205000
 V = lbox**3
 
 gxs = readTNG()
 #gxs = np.column_stack(random.choices(gxs['x','y','z'].as_array(),k=100000))[0]
-ids = np.random.choice(len(gxs),size=10000)
-gxs = gxs[ids]
+#ids = np.random.choice(len(gxs),size=10000)
+#gxs = gxs[ids]
 ntot = len(gxs)
 
 pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
@@ -49,8 +49,8 @@ N_mean_analytical = len(pos)*(4*np.pi*r**3/3)/lbox**3
 ax1.hlines(N_mean_analytical,np.min(ns),np.max(ns),ls=':')
 ax1.plot(ns,N_mean)
 
-ax1.text(.7,.1,r'$N_{Tot}=$'+f'{ntot}', transform=ax1.transAxes)
-ax1.text(.7,.2,r'$R=$'+f'{r}', transform=ax1.transAxes)
+ax1.text(.6,.1,r'$N_{Tot}=$'+f'{ntot}', transform=ax1.transAxes)
+ax1.text(.6,.2,r'$R=$'+f'{r}', transform=ax1.transAxes)
 
 #ax1.set_xlabel('Num. of spheres')
 ax1.set_ylabel(r'$\bar{N}(R)$')

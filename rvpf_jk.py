@@ -16,6 +16,7 @@ zspaceAxis = config['PARAMS']['zspaceAxis'] #r-space axis
 nesf = int(config['PARAMS']['nesf']) #num of test spheres
 rsbin = int(config['PARAMS']['rsbin']) #num of bins of r
 jk = int(config['PARAMS']['jk']) #num of bins of r
+invoid = config['PARAMS'].getboolean('invoid') #redshift space
 
 print(f"""
       ngxs = {ngxs}
@@ -23,6 +24,7 @@ print(f"""
       zspace = {zspace}
       zspaceAxis = {zspaceAxis}
       Num of JK resamplings = {jk}^3
+      invoid = {invoid}
       """)
 
 #%%
@@ -46,21 +48,30 @@ elif ngxs==100000: rs = np.geomspace(800,9100,rsbin)
 elif ngxs==10000: rs = np.geomspace(2000,17100,rsbin)
 elif ngxs==1000: rs = np.geomspace(7000,27800,rsbin)
 
+rs = np.geomspace(250,4000,10)
+
 gxs = readTNG()
-np.random.seed(seed)
-ids = np.random.choice(len(gxs),size=ngxs)
 if ngxs!=0:
+    np.random.seed(seed)
+    ids = np.random.choice(len(gxs),size=ngxs)
     gxs = gxs[ids]
+
+print('Replicating box...')
+newgxs = perrep(gxs,lbox,np.max(rs))
+print(f'Num of original gxs in box: {len(gxs)}\n\
+Num of gxs after replication: {len(newgxs)}')
 
 if zspace == True:
     H0 = .06774
     axis = zspaceAxis
     vaxis = 'v'+axis
-    gxs[axis]+=gxs[vaxis]/H0
-    gxs[axis][np.where(gxs[axis]<0.)[0]]+=lbox
-    gxs[axis][np.where(gxs[axis]>lbox)[0]]-=lbox
+    newgxs[axis]+=newgxs[vaxis]/H0
+    newgxs[axis][np.where(newgxs[axis]<0.)[0]]+=lbox
+    newgxs[axis][np.where(newgxs[axis]>lbox)[0]]-=lbox
 
-pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
+
+
+pos = np.column_stack((newgxs['x'],newgxs['y'],newgxs['z']))
 
 tree = spatial.cKDTree(pos)
 
@@ -70,16 +81,31 @@ P0 = np.zeros(len(rs))
 N_mean = np.zeros(len(rs))
 xi_mean = np.zeros(len(rs))
 
-chi_std = np.zeros(len(rs))
-NXi_std = np.zeros(len(rs))
-P0_std = np.zeros(len(rs))
-N_mean_std = np.zeros(len(rs))
-xi_mean_std = np.zeros(len(rs))
+if invoid == False:
+    if jk!= 0:
+        chi_std = np.zeros(len(rs))
+        NXi_std = np.zeros(len(rs))
+        P0_std = np.zeros(len(rs))
+        N_mean_std = np.zeros(len(rs))
+        xi_mean_std = np.zeros(len(rs))
 
-for i,r in enumerate(rs):
-    chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
-            chi_std[i], NXi_std[i], P0_std[i], N_mean_std[i], xi_mean_std[i]\
-                = cic_stats_jk(tree, nesf, r, lbox, jk)
+        print('Calculating JK cic statistics...')
+        
+        for i,r in enumerate(rs):
+            chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
+                    chi_std[i], NXi_std[i], P0_std[i], N_mean_std[i], xi_mean_std[i]\
+                        = cic_stats_jk(tree, nesf, r, lbox, jk)
+    else:
+        print('Calculating cic statistics...')
+        for i,r in enumerate(rs):
+            chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
+                        = cic_stats(tree, nesf, r, lbox)
+
+else:
+    print('Calculating invoid cic statistics...')
+    for i,r in enumerate(rs):
+        chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
+                    = cic_stats_invoid(tree, nesf, r)
 
 ##########
 # Writing
@@ -90,9 +116,17 @@ else:
     namefile = f'../data/allgxs_nesf{nesf}'
 if zspace==True: 
     namefile += f'_redshift{axis}'
-namefile += '_jk.npz'
+if invoid == True:
+    namefile+= '_invoid'
+if jk!=0:
+    namefile += '_jk'
+
+namefile += '.npz'
 print(f'Creating {namefile}')
-np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
+if jk!=0:
+    np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
+else:
+    np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
 
 
 # x = np.geomspace(1E-2,1E3,50)

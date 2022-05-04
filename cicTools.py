@@ -1,4 +1,5 @@
 
+#%%
 def cic_stats(tree, n, r, lbox):
     """Returns Counts in Cells statistics
 
@@ -16,8 +17,8 @@ def cic_stats(tree, n, r, lbox):
     import numpy as np
     from scipy import spatial
     
-    a = r
-    b = lbox - r    
+    a = 0
+    b = lbox    
     # (b - a) * random_sample() + a
     spheres = (b-a)*np.random.rand(n,3) + a
     #spheres_tree = spatial.cKDTree(spheres)
@@ -39,12 +40,16 @@ def cic_stats(tree, n, r, lbox):
 
     #xi_mean
     xi_mean = (np.mean((ngal-N_mean)**2)-N_mean)/N_mean**2
+
+    chi = -np.log(P0)/N_mean
+
+    NXi = N_mean*xi_mean
     
     del ngal
     
-    return P0, N_mean, xi_mean
+    return chi, NXi, P0, N_mean, xi_mean
 
-
+#%%
 def readTNG():
     """
     Read subhalos/galaxies in the TNG300-1 simulation 
@@ -80,6 +85,7 @@ def readTNG():
 
     return gxs
 
+#%%
 def cic_stats_jk(tree, n, r, lbox, jkbins):
     """
     Returns Counts in Cells statistics with Jackknife resampling
@@ -103,8 +109,8 @@ def cic_stats_jk(tree, n, r, lbox, jkbins):
     import numpy as np
     from scipy import spatial
     
-    a = r
-    b = lbox - r
+    a = 0
+    b = lbox
     n_ = int(n*2) #overhead of centers to then strip off
     # (b - a) * random_sample() + a
     spheres = (b-a)*np.random.rand(n_,3) + a
@@ -175,3 +181,206 @@ def cic_stats_jk(tree, n, r, lbox, jkbins):
     
     return chi, NXi, P0, N_mean, xi_mean, \
         chi_std, NXi_std, P0_std, N_mean_std, xi_mean_std 
+
+#%%
+def perrep(gxs,lbox,overhead):
+    """
+    PERiodic REPlication of box
+
+    Args:
+        gxs (ascii Table): Ascii Table with galaxy data (only uses positions)
+        lbox (float): Side length of simulation box
+        overhead (float): Side length to replicate 
+
+    Returns:
+        ascii Table: Table with the replicated galaxies
+
+    """
+
+    import numpy as np
+    from astropy.table import vstack
+    
+    #"""
+    #Single axes
+    #"""
+    newgxs1_x = gxs[gxs['x']<overhead]
+    newgxs1_x['x'] += lbox
+
+    newgxs1_y = gxs[gxs['y']<overhead]
+    newgxs1_y['y'] += lbox
+
+    newgxs1_z = gxs[gxs['z']<overhead]
+    newgxs1_z['z'] += lbox
+
+    newgxs2_x = gxs[gxs['x']>lbox-overhead]
+    newgxs2_x['x'] -= lbox
+
+    newgxs2_y = gxs[gxs['y']>lbox-overhead]
+    newgxs2_y['y'] -= lbox
+
+    newgxs2_z = gxs[gxs['z']>lbox-overhead]
+    newgxs2_z['z'] -= lbox
+
+    #"""
+    #XY
+    #"""
+    newgxs1_xy = gxs[np.logical_and(gxs['x']<overhead,gxs['y']<overhead)]
+    newgxs1_xy['x'] += lbox
+    newgxs1_xy['y'] += lbox
+
+    newgxs2_xy = gxs[np.logical_and(gxs['x']>lbox-overhead,gxs['y']>lbox-overhead)]
+    newgxs2_xy['x'] -= lbox
+    newgxs2_xy['y'] -= lbox
+
+    newgxs3_xy = gxs[np.logical_and(gxs['x']<overhead,gxs['y']>lbox-overhead)]
+    newgxs3_xy['x'] += lbox
+    newgxs3_xy['y'] -= lbox
+
+    newgxs4_xy = gxs[np.logical_and(gxs['x']>lbox-overhead,gxs['y']<overhead)]
+    newgxs4_xy['x'] -= lbox
+    newgxs4_xy['y'] += lbox
+
+    #"""
+    #XZ
+    #"""
+    newgxs1_xz = gxs[np.logical_and(gxs['x']<overhead,gxs['z']<overhead)]
+    newgxs1_xz['x'] += lbox
+    newgxs1_xz['z'] += lbox
+
+    newgxs2_xz = gxs[np.logical_and(gxs['x']>lbox-overhead,gxs['z']>lbox-overhead)]
+    newgxs2_xz['x'] -= lbox
+    newgxs2_xz['z'] -= lbox
+
+    newgxs3_xz = gxs[np.logical_and(gxs['x']<overhead,gxs['z']>lbox-overhead)]
+    newgxs3_xz['x'] += lbox
+    newgxs3_xz['z'] -= lbox
+
+    newgxs4_xz = gxs[np.logical_and(gxs['x']>lbox-overhead,gxs['z']<overhead)]
+    newgxs4_xz['x'] -= lbox
+    newgxs4_xz['z'] += lbox
+
+    #"""
+    #YZ
+    #"""
+    newgxs1_yz = gxs[np.logical_and(gxs['y']<overhead,gxs['z']<overhead)]
+    newgxs1_yz['y'] += lbox
+    newgxs1_yz['z'] += lbox
+
+    newgxs2_yz = gxs[np.logical_and(gxs['y']>lbox-overhead,gxs['z']>lbox-overhead)]
+    newgxs2_yz['y'] -= lbox
+    newgxs2_yz['z'] -= lbox
+
+    newgxs3_yz = gxs[np.logical_and(gxs['y']<overhead,gxs['z']>lbox-overhead)]
+    newgxs3_yz['y'] += lbox
+    newgxs3_yz['z'] -= lbox
+
+    newgxs4_yz = gxs[np.logical_and(gxs['y']>lbox-overhead,gxs['z']<overhead)]
+    newgxs4_yz['y'] -= lbox
+    newgxs4_yz['z'] += lbox
+
+    newgxs = vstack([gxs,newgxs1_x,newgxs1_y,newgxs1_z,\
+        newgxs2_x,newgxs2_y,newgxs2_z,\
+            newgxs1_xy,newgxs2_xy,newgxs3_xy,newgxs4_xy,\
+                newgxs1_xz,newgxs2_xz,newgxs3_xz,newgxs4_xz,\
+                    newgxs1_yz,newgxs2_yz,newgxs3_yz,newgxs4_yz])
+
+    return newgxs
+
+#%%
+def uniform_sphereSampling(n,xv,yv,zv,R):
+    """
+    Sample spherical volume with uniform distribution of points
+
+    Args:
+        n (int): number of uniform points
+        xv (float): x-coordinate of center of sphere
+        yv (float): y-coordinate of center of sphere
+        zv (float): z-coordinate of center of sphere
+        R (float): radius of sphere
+
+    Returns:
+        float: x-coordinate of points
+        float: y-coordinate of points
+        float: z-coordinate of points
+    """
+
+    import numpy as np
+
+    phi = np.random.uniform(0,2*np.pi,n)
+    costheta = np.random.uniform(-1,1,n)
+    u = np.random.uniform(0,1,n)
+
+    theta = np.arccos(costheta)
+    r = R*u**(1/3)
+
+    x = r * np.sin(theta) * np.cos(phi) + xv
+    y = r * np.sin(theta) * np.sin(phi) + yv
+    z = r * np.cos(theta) + zv
+
+    return np.column_stack([x,y,z])
+
+#%%
+def cic_stats_invoid(tree, n, r):
+    """Returns Counts in Cells statistics
+
+    Args:
+        tree (ckdtree): coordinates
+        voids (numpy array): voids data
+        n (int): Num of spheres
+        r (float): Radius of the spheres
+        seed (int, optional): Random seed. Defaults to 0.
+
+    Returns:
+        float: VPF
+        float: Mean number of points in spheres of radius r
+        float: Averaged 2pcf (variance of counts in cells)
+    """
+    import numpy as np
+    from scipy import spatial
+    from astropy.io import ascii
+
+    voids = ascii.read('../data/tng300-1_voids.dat',\
+        names=['r','x','y','z','vx','vy','vz',\
+            'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+
+    voids = voids[voids['r']>=7.]
+
+    voids['r'] = voids['r']*1000
+    voids['x'] = voids['x']*1000
+    voids['y'] = voids['y']*1000
+    voids['z'] = voids['z']*1000
+
+    n_invoid = round(n/len(voids)) #n is now num of spheres in each void
+
+    # a = 0
+    # b = lbox    
+    # (b - a) * random_sample() + a
+    # spheres = (b-a)*np.random.rand(n,3) + a
+
+    chi = np.zeros(len(voids))
+    NXi = np.zeros(len(voids))
+
+    P0 = np.zeros(len(voids))
+    N_mean = np.zeros(len(voids))
+    xi_mean = np.zeros(len(voids))
+
+    for nv in range(len(voids)):
+        spheres = uniform_sphereSampling(n_invoid,\
+            voids[nv]['x'],voids[nv]['y'],voids[nv]['z'],voids[nv]['r']-r)
+
+        ngal = np.zeros(n_invoid)
+        for k in range(n_invoid):
+            ngal[k] = len(tree.query_ball_point(spheres[k],r))
+
+
+        P0[nv] = len(np.where(ngal==0)[0])/n_invoid
+        N_mean[nv] = np.mean(ngal)
+        xi_mean[nv] = (np.mean((ngal-N_mean[nv])**2)-N_mean[nv])/N_mean[nv]**2
+
+        chi[nv] = -np.log(P0[nv])/N_mean[nv]
+        NXi[nv] = N_mean[nv]*xi_mean[nv]
+    
+    del ngal
+    
+    return np.mean(chi), np.mean(NXi), \
+        np.mean(P0), np.mean(N_mean), np.mean(xi_mean)
