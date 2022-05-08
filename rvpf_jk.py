@@ -48,7 +48,8 @@ elif ngxs==100000: rs = np.geomspace(800,9100,rsbin)
 elif ngxs==10000: rs = np.geomspace(2000,17100,rsbin)
 elif ngxs==1000: rs = np.geomspace(7000,27800,rsbin)
 
-rs = np.geomspace(250,4000,10)
+if invoid==True:
+    rs = np.geomspace(250,4000,10)
 
 gxs = readTNG()
 if ngxs!=0:

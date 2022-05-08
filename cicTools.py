@@ -59,7 +59,7 @@ def readTNG():
 
     """
     import sys
-    illustrisPath = '/home/fdavilakurban/'
+    illustrisPath = '/home/fede/'
     basePath = '../../../TNG300-1/output/'
     sys.path.append(illustrisPath)
     import illustris_python as il
