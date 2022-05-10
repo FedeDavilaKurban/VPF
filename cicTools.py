@@ -1,5 +1,8 @@
 
 #%%
+from errno import EKEYREJECTED
+
+
 def cic_stats(tree, n, r, lbox):
     """Returns Counts in Cells statistics
 
@@ -59,7 +62,7 @@ def readTNG():
 
     """
     import sys
-    illustrisPath = '/home/fede/'
+    illustrisPath = '/home/fdavilakurban/'
     basePath = '../../../TNG300-1/output/'
     sys.path.append(illustrisPath)
     import illustris_python as il
@@ -384,3 +387,112 @@ def cic_stats_invoid(tree, n, r):
     
     return np.mean(chi), np.mean(NXi), \
         np.mean(P0), np.mean(N_mean), np.mean(xi_mean)
+
+#%%
+
+def cic_stats_invoid_jk(tree, n, r):
+    """Returns Counts in Cells statistics
+
+    Args:
+        tree (ckdtree): coordinates
+        voids (numpy array): voids data
+        n (int): Num of spheres
+        r (float): Radius of the spheres
+        seed (int, optional): Random seed. Defaults to 0.
+
+    Returns:
+        float: VPF
+        float: Mean number of points in spheres of radius r
+        float: Averaged 2pcf (variance of counts in cells)
+    """
+    import numpy as np
+    from scipy import spatial
+    from astropy.io import ascii
+
+    voids = ascii.read('../data/tng300-1_voids.dat',\
+        names=['r','x','y','z','vx','vy','vz',\
+            'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+    voids = voids[voids['r']>=7.]
+    voids['r'] = voids['r']*1000
+    voids['x'] = voids['x']*1000
+    voids['y'] = voids['y']*1000
+    voids['z'] = voids['z']*1000
+
+
+    # Quiero 27 remuestreos JK (para que sea igual que el calculo de la VPF en el box,
+    # donde tengo 27 remuestreos porque saco cubos de un tercio del largo de cada eje
+    # del box (3**3=27) )
+    jk = 27
+
+    # chi_jk = np.zeros((jk,len(voids)))
+    # NXi_jk = np.zeros((jk,len(voids)))
+
+    # P0_jk = np.zeros((jk,len(voids)))
+    # N_mean_jk = np.zeros((jk,len(voids)))
+    # xi_mean_jk = np.zeros((jk,len(voids)))
+
+    chi_jk = np.zeros(jk)
+    NXi_jk = np.zeros(jk)
+
+    P0_jk = np.zeros(jk)
+    N_mean_jk = np.zeros(jk)
+    xi_mean_jk = np.zeros(jk)
+
+    # Voy eliminando de a 3 voids porque 87/27 ~= 3
+    # Si tuviera una cantidad distinta de voids este numero tiene que cambiar
+    step = int(len(voids)/jk)
+    for i in range(jk):
+
+        mask = np.ones(len(voids),bool)
+        mask[step*i:step*i+step] = 0
+        jkvoids = voids[mask]
+
+        chi_nv = np.zeros(len(jkvoids))
+        NXi_nv = np.zeros(len(jkvoids))
+
+        P0_nv = np.zeros(len(jkvoids))
+        N_mean_nv = np.zeros(len(jkvoids))
+        xi_mean_nv = np.zeros(len(jkvoids))
+
+        n_invoid = round(n/len(jkvoids)) #n_invoid is num of spheres in each void
+
+        for nv in range(len(jkvoids)):
+            spheres = uniform_sphereSampling(n_invoid,\
+                jkvoids[nv]['x'],jkvoids[nv]['y'],jkvoids[nv]['z'],jkvoids[nv]['r']-r)
+
+            ngal = np.zeros(n_invoid)
+            for k in range(n_invoid):
+                ngal[k] = len(tree.query_ball_point(spheres[k],r))
+
+
+            P0_nv[nv] = len(np.where(ngal==0)[0])/n_invoid
+            N_mean_nv[nv] = np.mean(ngal)
+            xi_mean_nv[nv] = (np.mean((ngal-N_mean_nv[nv])**2)-N_mean_nv[nv])\
+                /N_mean_nv[nv]**2
+
+            chi_nv[nv] = -np.log(P0_nv[nv])/N_mean_nv[nv]
+            NXi_nv[nv] = N_mean_nv[nv]*xi_mean_nv[nv]
+
+        chi_jk[i] = np.mean(chi_nv)
+        NXi_jk[i] = np.mean(NXi_nv)
+        P0_jk[i] = np.mean(P0_nv)
+        N_mean_jk[i] = np.mean(N_mean_nv)
+        xi_mean_jk[i] = np.mean(xi_mean_nv)
+        
+    
+    del ngal
+    
+    chi = np.mean(chi_jk.flat)
+    NXi = np.mean(NXi_jk.flat)
+    P0 = np.mean(P0_jk.flat)
+    N_mean = np.mean(N_mean_jk.flat)
+    xi_mean = np.mean(xi_mean_jk.flat)
+
+    chi_std = np.std(chi_jk.flat,ddof=1)
+    NXi_std = np.std(NXi_jk.flat,ddof=1)
+    P0_std = np.std(P0_jk.flat,ddof=1)
+    N_mean_std = np.std(N_mean_jk.flat,ddof=1)
+    xi_mean_std = np.std(xi_mean_jk.flat,ddof=1)
+
+    return chi, NXi, P0, N_mean, xi_mean, \
+        chi_std, NXi_std, P0_std, N_mean_std, xi_mean_std 

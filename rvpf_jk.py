@@ -48,8 +48,12 @@ elif ngxs==100000: rs = np.geomspace(800,9100,rsbin)
 elif ngxs==10000: rs = np.geomspace(2000,17100,rsbin)
 elif ngxs==1000: rs = np.geomspace(7000,27800,rsbin)
 
-# if invoid==True:
-#     rs = np.geomspace(250,4000,10)
+if invoid==True:
+    if ngxs==0: rs = np.geomspace(250,2800,10) 
+    elif ngxs==10000000: rs = np.geomspace(300,3000,10) 
+    elif ngxs==1000000: rs = np.geomspace(700,3500,10)
+
+
 
 gxs = readTNG()
 if ngxs!=0:
@@ -102,11 +106,27 @@ if invoid == False:
             chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
                         = cic_stats(tree, nesf, r, lbox)
 
-else:
-    print('Calculating invoid cic statistics...')
-    for i,r in enumerate(rs):
-        chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
-                    = cic_stats_invoid(tree, nesf, r)
+if invoid == True:
+
+    if jk==3:
+        chi_std = np.zeros(len(rs))
+        NXi_std = np.zeros(len(rs))
+        P0_std = np.zeros(len(rs))
+        N_mean_std = np.zeros(len(rs))
+        xi_mean_std = np.zeros(len(rs))
+
+        print('Calculating JK invoid cic statistics...')
+        
+        for i,r in enumerate(rs):
+            chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
+                    chi_std[i], NXi_std[i], P0_std[i], N_mean_std[i], xi_mean_std[i]\
+                        = cic_stats_invoid_jk(tree, nesf, r)
+
+    else:
+        print('Calculating invoid cic statistics...')
+        for i,r in enumerate(rs):
+            chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
+                        = cic_stats_invoid(tree, nesf, r)
 
 ##########
 # Writing
@@ -132,19 +152,19 @@ else:
 
 # x = np.geomspace(1E-2,1E3,50)
 # c='k'
-# chi = -np.log(P0)/N_mean
-# NE = N_mean*xi_mean
+# #chi = -np.log(P0)/N_mean
+# #NE = N_mean*xi_mean
 
 # plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
-# a=.3
-# plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
+# #a=.3
+# #plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
 # #plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
 # plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
 # #plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
 # # Q=1
 # # plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
 
-# plt.scatter(NE,chi,lw=2)
+# plt.plot(NXi,chi,lw=2)
 # plt.xscale('log')
 # plt.legend(loc=3)
 # plt.show()
