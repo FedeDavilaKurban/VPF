@@ -10,7 +10,7 @@ config.read('config.ini')
 
 seed = int(config['PARAMS']['seed']) #random seed
 lbox = float(config['PARAMS']['lbox']) #length of box
-ngxs = int(config['PARAMS']['ngxs']) #num of galaxies
+ngxs = float(config['PARAMS']['ngxs']) #dilution
 zspace = config['PARAMS'].getboolean('zspace') #redshift space
 zspaceAxis = config['PARAMS']['zspaceAxis'] #r-space axis
 nesf = int(config['PARAMS']['nesf']) #num of test spheres
@@ -41,24 +41,24 @@ rs range for ngxs=10000: np.geomspace(1500,16000,x)
 rs range for ngxs=100000: np.geomspace(500,9000,x)
 rs range for ngxs=1000000: np.geomspace(200,5000,x)
 """
-if ngxs==0: rs = np.geomspace(40,4000,rsbin) 
-elif ngxs==10000000: rs = np.geomspace(30,5000,rsbin) 
-elif ngxs==1000000: rs = np.geomspace(190,5800,rsbin)
-elif ngxs==100000: rs = np.geomspace(800,9100,rsbin)
-elif ngxs==10000: rs = np.geomspace(2000,17100,rsbin)
-elif ngxs==1000: rs = np.geomspace(7000,27800,rsbin)
+# if ngxs==0: rs = np.geomspace(40,4000,rsbin) 
+# elif ngxs==10000000: rs = np.geomspace(30,5000,rsbin) 
+# elif ngxs==1000000: rs = np.geomspace(190,5800,rsbin)
+# elif ngxs==100000: rs = np.geomspace(800,9100,rsbin)
+# elif ngxs==10000: rs = np.geomspace(2000,17100,rsbin)
+# elif ngxs==1000: rs = np.geomspace(7000,27800,rsbin)
 
-if invoid==True:
-    if ngxs==0: rs = np.geomspace(250,2800,10) 
-    elif ngxs==10000000: rs = np.geomspace(300,3000,10) 
-    elif ngxs==1000000: rs = np.geomspace(700,3500,10)
+# if invoid==True:
+#     if ngxs==0: rs = np.geomspace(250,2800,10) 
+#     elif ngxs==10000000: rs = np.geomspace(300,3000,10) 
+#     elif ngxs==1000000: rs = np.geomspace(700,3500,10)
 
-
+rs = np.geomspace(300,3000,rsbin)
 
 gxs = readTNG()
 if ngxs!=0:
     np.random.seed(seed)
-    ids = np.random.choice(len(gxs),size=ngxs)
+    ids = np.random.choice(len(gxs),size=int(len(gxs)*ngxs))
     gxs = gxs[ids]
 
 print('Replicating box...')
@@ -132,7 +132,7 @@ if invoid == True:
 # Writing
 ##########
 if ngxs!=0:
-    namefile = f'../data/ngxs{ngxs}_nesf{nesf}'
+    namefile = f'../data/dilut{ngxs}_nesf{nesf}'
 else:
     namefile = f'../data/allgxs_nesf{nesf}'
 if zspace==True: 
