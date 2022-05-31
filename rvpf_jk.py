@@ -53,7 +53,7 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 #     elif ngxs==10000000: rs = np.geomspace(300,3000,10) 
 #     elif ngxs==1000000: rs = np.geomspace(700,3500,10)
 
-rs = np.geomspace(300,3000,rsbin)
+rs = np.geomspace(300,2500,rsbin)
 
 gxs = readTNG()
 if ngxs!=0:
@@ -149,7 +149,7 @@ if jk!=0:
 else:
     np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
 
-
+print(chi)
 # x = np.geomspace(1E-2,1E3,50)
 # c='k'
 # #chi = -np.log(P0)/N_mean
