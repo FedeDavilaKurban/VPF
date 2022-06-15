@@ -116,6 +116,7 @@ def cic_stats_jk(tree, n, r, lbox, jkbins):
     b = lbox
     n_ = int(n*2) #overhead of centers to then strip off
     # (b - a) * random_sample() + a
+    np.random.seed(12312312)
     spheres = (b-a)*np.random.rand(n_,3) + a
 
     rbins = np.linspace(a,b,jkbins+1)
