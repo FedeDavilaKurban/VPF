@@ -17,6 +17,7 @@ nesf = int(config['PARAMS']['nesf']) #num of test spheres
 rsbin = int(config['PARAMS']['rsbin']) #num of bins of r
 jk = int(config['PARAMS']['jk']) #num of bins of r
 invoid = config['PARAMS'].getboolean('invoid') #redshift space
+completeRrange = config['PARAMS'].getboolean('completeRrange')
 
 print(f"""
       ngxs = {ngxs}
@@ -25,6 +26,7 @@ print(f"""
       zspaceAxis = {zspaceAxis}
       Num of JK resamplings = {jk}^3
       invoid = {invoid}
+      completeRrange = {completeRrange}
       """)
 
 #%%
@@ -53,7 +55,8 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 #     elif ngxs==10000000: rs = np.geomspace(300,3000,10) 
 #     elif ngxs==1000000: rs = np.geomspace(700,3500,10)
 
-rs = np.geomspace(300,2500,rsbin)
+if completeRrange==False: rs = np.geomspace(300,2500,rsbin)
+if completeRrange==True: rs = np.geomspace(40,4000,rsbin)
 
 gxs = readTNG()
 if ngxs!=0:
@@ -139,6 +142,8 @@ if zspace==True:
     namefile += f'_redshift{axis}'
 if invoid == True:
     namefile+= '_invoid'
+if completeRrange == True:
+    namefile+='_allR'
 if jk!=0:
     namefile += '_jk'
 
@@ -150,22 +155,23 @@ else:
     np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
 
 print(chi)
-# x = np.geomspace(1E-2,1E3,50)
-# c='k'
-# #chi = -np.log(P0)/N_mean
-# #NE = N_mean*xi_mean
 
-# plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
-# #a=.3
-# #plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
-# #plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
-# plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
-# #plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
-# # Q=1
-# # plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
+x = np.geomspace(1E-2,1E3,50)
+c='k'
+#chi = -np.log(P0)/N_mean
+#NE = N_mean*xi_mean
 
-# plt.plot(NXi,chi,lw=2)
-# plt.xscale('log')
-# plt.legend(loc=3)
-# plt.show()
+plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
+#a=.3
+#plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
+#plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
+plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
+#plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
+# Q=1
+# plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
+
+plt.plot(NXi,chi,lw=2)
+plt.xscale('log')
+plt.legend(loc=3)
+plt.show()
 # %%

@@ -35,8 +35,8 @@ for i,n in enumerate(ns):
             chi_std[i], NXi_std[i], P0_std[i], N_mean_std[i], xi_mean_std[i] = cic_stats_jk(ran_tree, n, r, lbox, jkbins=3)
 
 #%%
-namefile = '../data/stability_randoms.npz'
-np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,ns)
+#namefile = '../data/stability_randoms.npz'
+#np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,ns)
 #%%
 namefile = '../data/stability_randoms_jk.npz'
 
@@ -93,6 +93,25 @@ plt.show()
 #Estos son los plots con JK
 #
 
+r = .004
+lbox = 1
+nran = 10000000
+
+namefile = f'../data/stability_randoms_jk.npz'
+stats = np.load(namefile)
+
+chi = stats['arr_0']
+NXi = stats['arr_1']
+P0 = stats['arr_2']
+N_mean = stats['arr_3']
+xi_mean = stats['arr_4']
+chi_std = stats['arr_5']
+NXi_std = stats['arr_6']
+P0_std = stats['arr_7']
+N_mean_std = stats['arr_8']
+xi_mean_std = stats['arr_9']
+ns = np.geomspace(10,1000000,30).astype(int)
+
 fig= plt.figure(figsize=(6,9))
 ax1 = fig.add_subplot(311)
 ax2 = fig.add_subplot(312)
@@ -108,7 +127,7 @@ ax1.hlines(N_mean_analytical,np.min(ns),np.max(ns),ls=':',color='k')
 ax1.errorbar(ns,N_mean,yerr=N_mean_std,marker='o',capsize=3)
 #ax1.plot(ns,N_mean)
 
-ax1.text(.6,.9,r'$n_\mathrm{tot}=$'+f'{nran}', transform=ax1.transAxes)
+ax1.text(.6,.9,r'$n_\mathrm{ran}=$'+f'{nran}', transform=ax1.transAxes)
 ax1.text(.6,.7,r'$R=$'+f'{r}', transform=ax1.transAxes)
 ax1.text(.6,.8,r'$L_\mathrm{box}=1$', transform=ax1.transAxes)
 
