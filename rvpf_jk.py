@@ -55,7 +55,7 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 #     elif ngxs==10000000: rs = np.geomspace(300,3000,10) 
 #     elif ngxs==1000000: rs = np.geomspace(700,3500,10)
 
-if completeRrange==False: rs = np.geomspace(300,2500,rsbin)
+if completeRrange==False: rs = np.geomspace(250,2500,rsbin)
 if completeRrange==True: rs = np.geomspace(40,4000,rsbin)
 
 gxs = readTNG()

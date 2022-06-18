@@ -62,7 +62,7 @@ def readTNG():
 
     """
     import sys
-    illustrisPath = '/home/fdavilakurban/'
+    illustrisPath = '/home/fede/'
     basePath = '../../../TNG300-1/output/'
     sys.path.append(illustrisPath)
     import illustris_python as il
@@ -370,7 +370,7 @@ def cic_stats_invoid(tree, n, r):
 
     for nv in range(len(voids)):
         spheres = uniform_sphereSampling(n_invoid,\
-            voids[nv]['x'],voids[nv]['y'],voids[nv]['z'],voids[nv]['r']-r)
+            voids[nv]['x'],voids[nv]['y'],voids[nv]['z'],voids[nv]['r'])
 
         ngal = np.zeros(n_invoid)
         for k in range(n_invoid):
@@ -497,3 +497,49 @@ def cic_stats_invoid_jk(tree, n, r):
 
     return chi, NXi, P0, N_mean, xi_mean, \
         chi_std, NXi_std, P0_std, N_mean_std, xi_mean_std 
+
+def delta_P0(P0,Nran):
+    """Calculates error for P0 as derived in Colombi et al 1995
+    Args:
+
+        P0(numpy array): value(s) of P0
+        Nran(numpy array): number of volume samples in the data
+
+    Returns:
+        aray: uncertainty of P0
+    """
+
+    import numpy as np
+    return np.sqrt(P0*(1-P0)/Nran)
+
+def delta_chi(chi,P0,P0err,N_mean,N_mean_std):
+    """Calculates error for chi as derived in Colombi et al 1995 (Fry et al 2013)
+    Args:
+
+        chi(numpy array): value(s) of chi
+        P0(numpy array): value(s) of P0
+        P0err (numpy array): delta P0
+        N_mean(numpy array): mean number of objects in volume(r)
+        N_mean_std(numpy array): uncertainty of N_mean calculated with JK resampling
+
+    Returns:
+        aray: uncertainty of chi
+    """
+    import numpy as np
+
+    return chi*abs(P0err/(P0*abs(np.log(P0)))-N_mean_std/N_mean)
+
+def delta_NXi(NXi,N_mean,N_mean_std,xi_mean,xi_mean_std):
+    """Calculates error for NXi by propagating JK errors of N_mean and xi_mean
+    Args:
+        NXi(numpy array) = N_mean multiplied by xi_mean
+        N_mean(numpy array): mean number of objects in volume(r)
+        N_mean_std(numpy array): uncertainty of N_mean calculated with JK resampling
+        xi_mean(numpy array): mean variance of objects in volume(r)
+        xi_mean_std(numpy array): uncertainty of xi_mean calculated with JK resampling
+
+    Returns:
+        aray: uncertainty of NXi
+    """
+    import numpy as np
+    return NXi * np.sqrt((N_mean_std/N_mean)**2+(xi_mean_std/xi_mean)**2)

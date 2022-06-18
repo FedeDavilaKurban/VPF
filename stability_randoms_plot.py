@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from cicTools import cic_stats, cic_stats_jk
 from scipy import spatial
-
+#%%
 r = .004
 lbox = 1
 nran = 10000000
@@ -43,12 +43,14 @@ namefile = '../data/stability_randoms_jk.npz'
 np.savez(namefile,chi, NXi, P0, N_mean, xi_mean, \
     chi_std, NXi_std, P0_std, N_mean_std,xi_mean_std)
 #%%
+
 fig= plt.figure(figsize=(6,9))
 ax1 = fig.add_subplot(311)
 ax2 = fig.add_subplot(312)
 ax3 = fig.add_subplot(313)
 ax1.get_shared_x_axes().join(ax1, ax2, ax3)
 plt.rcParams['font.size'] = 14
+
 
 """
 Nmean
@@ -93,6 +95,8 @@ plt.show()
 #Estos son los plots con JK
 #
 
+from cicTools import delta_P0
+
 r = .004
 lbox = 1
 nran = 10000000
@@ -112,6 +116,9 @@ N_mean_std = stats['arr_8']
 xi_mean_std = stats['arr_9']
 ns = np.geomspace(10,1000000,30).astype(int)
 
+P0err = delta_P0(P0,ns)
+
+
 fig= plt.figure(figsize=(6,9))
 ax1 = fig.add_subplot(311)
 ax2 = fig.add_subplot(312)
@@ -122,7 +129,7 @@ plt.rcParams['font.size'] = 14
 """
 Nmean
 """
-N_mean_analytical = len(ranpos)*(4*np.pi*r**3/3)/(lbox+r)**3
+N_mean_analytical = nran*(4*np.pi*r**3/3)/(lbox+r)**3
 ax1.hlines(N_mean_analytical,np.min(ns),np.max(ns),ls=':',color='k')
 ax1.errorbar(ns,N_mean,yerr=N_mean_std,marker='o',capsize=3)
 #ax1.plot(ns,N_mean)
@@ -137,7 +144,7 @@ ax1.set_xscale('log')
 """
 P0
 """
-ax2.errorbar(ns,P0,yerr=P0_std,marker='o',capsize=3)
+ax2.errorbar(ns,P0,yerr=P0err,marker='o',capsize=3)
 
 ax2.set_ylabel(r'$P_0$')
 ax2.set_xscale('log')
@@ -158,6 +165,6 @@ ax2.set_xticklabels([])
 
 ax1.set_title('Random sample')
 plt.tight_layout()
-plt.savefig('../plots/stability_randoms_jk.png')
+#plt.savefig('../plots/stability_randoms_jk.png')
 plt.show()
 # %%
