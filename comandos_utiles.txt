@@ -1,0 +1,4 @@
+Para leer dm de illustris estoy montando el disco desde Clemente (parado en VPF/codes):
+
+sshfs fdavilakurban@clemente:/mnt/simulations/illustris/TNG300-1/snap_099 ../../../TNG300-1/output/snapdir_099/
+sshfs fdavilakurban@clemente:/mnt/simulations/illustris/TNG300-1/postprocessing/offsets/ ../../../TNG300-1/postprocessing/offsets/

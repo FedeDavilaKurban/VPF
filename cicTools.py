@@ -1,6 +1,6 @@
 
 #%%
-from errno import EKEYREJECTED
+#from errno import EKEYREJECTED
 
 
 def cic_stats(tree, n, r, lbox):
@@ -439,8 +439,7 @@ def cic_stats_invoid_jk(tree, n, r):
     N_mean_jk = np.zeros(jk)
     xi_mean_jk = np.zeros(jk)
 
-    # Voy eliminando de a 3 voids porque 87/27 ~= 3
-    # Si tuviera una cantidad distinta de voids este numero tiene que cambiar
+    # Voy saltando 'step' cantidad de voids
     step = int(len(voids)/jk)
     for i in range(jk):
 
@@ -539,7 +538,7 @@ def delta_NXi(NXi,N_mean,N_mean_std,xi_mean,xi_mean_std):
         xi_mean_std(numpy array): uncertainty of xi_mean calculated with JK resampling
 
     Returns:
-        aray: uncertainty of NXi
+        array: uncertainty of NXi
     """
     import numpy as np
     return NXi * np.sqrt((N_mean_std/N_mean)**2+(xi_mean_std/xi_mean)**2)
