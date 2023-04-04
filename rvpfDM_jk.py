@@ -108,9 +108,10 @@ if invoid == True:
 namefile = '../data/DMdata'
 if zspace==True: 
     namefile += f'_redshift{zspaceAxis}'
+if invoid == True:
+    namefile+= '_invoid'
 if jk!=0:
     namefile += '_jk'
-
 namefile += '.npz'
 print(f'Creating {namefile}')
 
