@@ -30,7 +30,8 @@ print(f"""
       #completeRrange = {completeRrange}
 
 #%%
-rs = np.geomspace(40,4000,rsbin) 
+#rs = np.geomspace(40,4000,rsbin) 
+rs = np.geomspace(100,1400,rsbin) 
 
 DM = np.load('../data/dmpos_diluted.npz')
 pos = DM['arr_0']

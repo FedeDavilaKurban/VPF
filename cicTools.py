@@ -53,31 +53,39 @@ def cic_stats(tree, n, r, lbox):
     return chi, NXi, P0, N_mean, xi_mean
 
 #%%
-def readTNG():
+def readTNG(snap=99,minmass=-1.,maxmass=3.):
     """
     Read subhalos/galaxies in the TNG300-1 simulation 
 
+    Args:
+        disk (string): where to read TNG. 'local' or 'mounted'
+        snap (int): snapshot number
+        minmass, maxmass (float): log power of min/max mass thresholds (e.g.: -1 means 1E-9Mdot, 3 means 1E13Mdot)
+            
     Returns:
         ascii Table: gxs (Position, Mass, Velocity)
 
     """
     import sys
-    illustrisPath = '/home/fede/'
+    illustrisPath = '/home/fdavilakurban/'
+    #if disk=='local':
     basePath = '../../../TNG300-1/output/'
+    #elif disk=='mounted':
+
     sys.path.append(illustrisPath)
     import illustris_python as il
     import numpy as np
     from astropy.table import Table
     import random 
     
-    mass = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloMass'])                                                                                                                      
-    ids = np.where((np.log10(mass)>-1.)&(np.log10(mass)<3.))
+    mass = il.groupcat.loadSubhalos(basePath,snap,fields=['SubhaloMass'])                                                                                                                      
+    ids = np.where((np.log10(mass)>minmass)&(np.log10(mass)<maxmass))
     mass = mass[ids]
 
-    pos = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloPos'])
+    pos = il.groupcat.loadSubhalos(basePath,snap,fields=['SubhaloPos'])
     pos = pos[ids]
 
-    vel = il.groupcat.loadSubhalos(basePath,99,fields=['SubhaloVel'])
+    vel = il.groupcat.loadSubhalos(basePath,snap,fields=['SubhaloVel'])
     vel = vel[ids]
 
 
@@ -354,7 +362,7 @@ def cic_stats_invoid(tree, n, r):
     voids['y'] = voids['y']*1000
     voids['z'] = voids['z']*1000
 
-    n_invoid = round(n/len(voids)) #n is now num of spheres in each void
+    n_invoid = round(n/len(voids)) #n_invoid is now num of spheres in each void
 
     # a = 0
     # b = lbox    

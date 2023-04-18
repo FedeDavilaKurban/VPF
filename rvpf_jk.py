@@ -18,6 +18,7 @@ rsbin = int(config['PARAMS']['rsbin']) #num of bins of r
 jk = int(config['PARAMS']['jk']) #num of bins of r
 invoid = config['PARAMS'].getboolean('invoid') #redshift space
 completeRrange = config['PARAMS'].getboolean('completeRrange')
+snap = int(config['PARAMS']['snap']) #snapshot number
 
 print(f"""
       ngxs = {ngxs}
@@ -27,6 +28,7 @@ print(f"""
       Num of JK resamplings = {jk}^3
       invoid = {invoid}
       completeRrange = {completeRrange}
+      snap = {snap}
       """)
 
 #%%
@@ -58,7 +60,7 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 if completeRrange==False: rs = np.geomspace(250,2500,rsbin)
 if completeRrange==True: rs = np.geomspace(40,4000,rsbin)
 
-gxs = readTNG()
+gxs = readTNG(snap=snap)
 if ngxs!=0:
     np.random.seed(seed)
     ids = np.random.choice(len(gxs),size=int(len(gxs)*ngxs))
@@ -146,6 +148,8 @@ if completeRrange == True:
     namefile+='_allR'
 if jk!=0:
     namefile += '_jk'
+if snap!=99:
+    namefile+=f'_snap{snap}'
 
 namefile += '.npz'
 print(f'Creating {namefile}')
@@ -156,22 +160,23 @@ else:
 
 print(chi)
 
-x = np.geomspace(1E-2,1E3,50)
-c='k'
-#chi = -np.log(P0)/N_mean
-#NE = N_mean*xi_mean
+#%%
+# x = np.geomspace(1E-2,1E3,50)
+# c='k'
+# #chi = -np.log(P0)/N_mean
+# #NE = N_mean*xi_mean
 
-plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
-#a=.3
-#plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
-#plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
-plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
-#plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
-# Q=1
-# plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
+# plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
+# #a=.3
+# #plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
+# #plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
+# plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
+# #plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
+# # Q=1
+# # plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
 
-plt.plot(NXi,chi,lw=2)
-plt.xscale('log')
-plt.legend(loc=3)
-plt.show()
+# plt.plot(NXi,chi,lw=2)
+# plt.xscale('log')
+# plt.legend(loc=3)
+# plt.show()
 # %%
