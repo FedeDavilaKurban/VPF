@@ -11,3 +11,6 @@ la jerarquía de clustering
 - Calcular VPF con distintas definiciones de void
 Identificar voids con todas las gxs (10**9-10**13Msun) y con 
 un corte mayor (10**11-10**13Msun) y rellenar después.
+- Comparar con DM para tener insight respecto del bias
+
+-
