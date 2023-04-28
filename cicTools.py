@@ -332,7 +332,7 @@ def uniform_sphereSampling(n,xv,yv,zv,R):
     return np.column_stack([x,y,z])
 
 #%%
-def cic_stats_invoid(tree, n, r):
+def cic_stats_invoid(tree, n, r, minradV):
     """Returns Counts in Cells statistics
 
     Args:
@@ -340,7 +340,8 @@ def cic_stats_invoid(tree, n, r):
         voids (numpy array): voids data
         n (int): Num of spheres
         r (float): Radius of the spheres
-        seed (int, optional): Random seed. Defaults to 0.
+        # seed (int, optional): Random seed. Defaults to 0.
+        minradV (float): minimum void radius
 
     Returns:
         float: VPF
@@ -355,7 +356,7 @@ def cic_stats_invoid(tree, n, r):
         names=['r','x','y','z','vx','vy','vz',\
             'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
 
-    voids = voids[voids['r']>=7.]
+    voids = voids[voids['r']>=minradV]
 
     voids['r'] = voids['r']*1000
     voids['x'] = voids['x']*1000
@@ -399,7 +400,7 @@ def cic_stats_invoid(tree, n, r):
 
 #%%
 
-def cic_stats_invoid_jk(tree, n, r):
+def cic_stats_invoid_jk(tree, n, r, minradV):
     """Returns Counts in Cells statistics
 
     Args:
@@ -407,7 +408,8 @@ def cic_stats_invoid_jk(tree, n, r):
         voids (numpy array): voids data
         n (int): Num of spheres
         r (float): Radius of the spheres
-        seed (int, optional): Random seed. Defaults to 0.
+        # seed (int, optional): Random seed. Defaults to 0.
+        minradV (float): minimum void radius
 
     Returns:
         float: VPF
@@ -421,7 +423,7 @@ def cic_stats_invoid_jk(tree, n, r):
     voids = ascii.read('../data/tng300-1_voids.dat',\
         names=['r','x','y','z','vx','vy','vz',\
             'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
-    voids = voids[voids['r']>=7.]
+    voids = voids[voids['r']>=minradV]
     voids['r'] = voids['r']*1000
     voids['x'] = voids['x']*1000
     voids['y'] = voids['y']*1000

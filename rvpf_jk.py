@@ -19,6 +19,8 @@ jk = int(config['PARAMS']['jk']) #num of bins of r
 invoid = config['PARAMS'].getboolean('invoid') #redshift space
 completeRrange = config['PARAMS'].getboolean('completeRrange')
 snap = int(config['PARAMS']['snap']) #snapshot number
+minmass = float(config['PARAMS']['minmass']) #log number of minimum mass
+minradV = float(config['PARAMS']['minradV']) #minimum void radius
 
 print(f"""
       ngxs = {ngxs}
@@ -29,7 +31,36 @@ print(f"""
       invoid = {invoid}
       completeRrange = {completeRrange}
       snap = {snap}
+      minmass = {minmass}
+      minradV = {minradV}
       """)
+
+#
+#-----------
+# Namefile
+#-----------
+#
+
+if ngxs!=0:
+    namefile = f'../data/dilut{ngxs}_nesf{nesf}'
+else:
+    namefile = f'../data/allgxs_nesf{nesf}'
+if zspace==True: 
+    namefile += f'_redshift{zspaceAxis}'
+if invoid == True:
+    namefile+= '_invoid'
+if completeRrange == True:
+    namefile+='_allR'
+if jk!=0:
+    namefile += '_jk'
+if snap!=99:
+    namefile+=f'_snap{snap}'
+if minmass==0.:
+    namefile+=f'_minMass1e10'
+elif minmass==1.:
+    namefile+=f'_minMass1e11'
+namefile += f'_minradV{minradV}'
+
 
 #%%
 """
@@ -57,10 +88,17 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 #     elif ngxs==10000000: rs = np.geomspace(300,3000,10) 
 #     elif ngxs==1000000: rs = np.geomspace(700,3500,10)
 
-if completeRrange==False: rs = np.geomspace(250,2500,rsbin)
+if completeRrange==False: 
+    rs = np.geomspace(250,2500,rsbin) #Dejo esto para que tome algún valor en caso que invoid==False
+    if invoid==True:
+        if minradV==7.:
+            rs = np.geomspace(250,2500,rsbin) 
+        elif minradV==9.:
+            rs = np.geomspace(900,9000,rsbin)
+
 if completeRrange==True: rs = np.geomspace(40,4000,rsbin)
 
-gxs = readTNG(snap=snap)
+gxs = readTNG(snap=snap,minmass=minmass)
 if ngxs!=0:
     np.random.seed(seed)
     ids = np.random.choice(len(gxs),size=int(len(gxs)*ngxs))
@@ -125,31 +163,17 @@ if invoid == True:
         for i,r in enumerate(rs):
             chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
                     chi_std[i], NXi_std[i], P0_std[i], N_mean_std[i], xi_mean_std[i]\
-                        = cic_stats_invoid_jk(tree, nesf, r)
+                        = cic_stats_invoid_jk(tree, nesf, r, minradV)
 
     else:
         print('Calculating invoid cic statistics...')
         for i,r in enumerate(rs):
             chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
-                        = cic_stats_invoid(tree, nesf, r)
+                        = cic_stats_invoid(tree, nesf, r, minradV)
 
 ##########
 # Writing
 ##########
-if ngxs!=0:
-    namefile = f'../data/dilut{ngxs}_nesf{nesf}'
-else:
-    namefile = f'../data/allgxs_nesf{nesf}'
-if zspace==True: 
-    namefile += f'_redshift{axis}'
-if invoid == True:
-    namefile+= '_invoid'
-if completeRrange == True:
-    namefile+='_allR'
-if jk!=0:
-    namefile += '_jk'
-if snap!=99:
-    namefile+=f'_snap{snap}'
 
 namefile += '.npz'
 print(f'Creating {namefile}')
