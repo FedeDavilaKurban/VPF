@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from cicTools import *
 from scipy import spatial
 import configparser
+from astropy.io import ascii
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -61,6 +62,11 @@ elif minmass==1.:
     namefile+=f'_minMass1e11'
 namefile += f'_minradV{minradV}'
 
+if minmass==-1.: voidsfile='../data/tng300-1_voids.dat'
+elif minmass==0.: voidsfile='../data/voids_1e10.dat'
+elif minmass==1.: voidsfile='../data/voids_1e11.dat'
+print('void file location:', voidsfile)
+
 
 #%%
 """
@@ -94,9 +100,10 @@ if completeRrange==False:
         if minradV==7.:
             rs = np.geomspace(250,2500,rsbin) 
         elif minradV==9.:
-            rs = np.geomspace(900,9000,rsbin)
+            rs = np.geomspace(1500,6500,rsbin)
 
 if completeRrange==True: rs = np.geomspace(40,4000,rsbin)
+
 
 gxs = readTNG(snap=snap,minmass=minmass)
 if ngxs!=0:
@@ -151,6 +158,16 @@ if invoid == False:
 
 if invoid == True:
 
+    voids = ascii.read(voidsfile,\
+        names=['r','x','y','z','vx','vy','vz',\
+            'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+    voids = voids[voids['r']>=minradV]
+    print('N of voids:',len(voids))
+    voids['r'] = voids['r']*1000 #Converts kpc to Mpc
+    voids['x'] = voids['x']*1000
+    voids['y'] = voids['y']*1000
+    voids['z'] = voids['z']*1000
+
     if jk==3:
         chi_std = np.zeros(len(rs))
         NXi_std = np.zeros(len(rs))
@@ -163,13 +180,13 @@ if invoid == True:
         for i,r in enumerate(rs):
             chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
                     chi_std[i], NXi_std[i], P0_std[i], N_mean_std[i], xi_mean_std[i]\
-                        = cic_stats_invoid_jk(tree, nesf, r, minradV)
+                        = cic_stats_invoid_jk(voids, tree, nesf, r)
 
     else:
         print('Calculating invoid cic statistics...')
         for i,r in enumerate(rs):
             chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
-                        = cic_stats_invoid(tree, nesf, r, minradV)
+                        = cic_stats_invoid(voids, tree, nesf, r)
 
 ##########
 # Writing
@@ -182,7 +199,7 @@ if jk!=0:
 else:
     np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
 
-print(chi)
+print(chi, rs)
 
 #%%
 # x = np.geomspace(1E-2,1E3,50)

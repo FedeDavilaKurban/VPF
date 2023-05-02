@@ -332,15 +332,17 @@ def uniform_sphereSampling(n,xv,yv,zv,R):
     return np.column_stack([x,y,z])
 
 #%%
-def cic_stats_invoid(tree, n, r, minradV):
+def cic_stats_invoid(voids, tree, n, r):
     """Returns Counts in Cells statistics
 
     Args:
+        voids (ascii Table): void file
         tree (ckdtree): coordinates
         voids (numpy array): voids data
         n (int): Num of spheres
         r (float): Radius of the spheres
         # seed (int, optional): Random seed. Defaults to 0.
+        voidsfile (string): voids file location
         minradV (float): minimum void radius
 
     Returns:
@@ -349,19 +351,19 @@ def cic_stats_invoid(tree, n, r, minradV):
         float: Averaged 2pcf (variance of counts in cells)
     """
     import numpy as np
-    from scipy import spatial
-    from astropy.io import ascii
+    #from scipy import spatial
+    #from astropy.io import ascii
 
-    voids = ascii.read('../data/tng300-1_voids.dat',\
-        names=['r','x','y','z','vx','vy','vz',\
-            'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+    # voids = ascii.read(voidsfile,\
+    #     names=['r','x','y','z','vx','vy','vz',\
+    #         'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
 
-    voids = voids[voids['r']>=minradV]
+    # voids = voids[voids['r']>=minradV]
 
-    voids['r'] = voids['r']*1000
-    voids['x'] = voids['x']*1000
-    voids['y'] = voids['y']*1000
-    voids['z'] = voids['z']*1000
+    # voids['r'] = voids['r']*1000
+    # voids['x'] = voids['x']*1000
+    # voids['y'] = voids['y']*1000
+    # voids['z'] = voids['z']*1000
 
     n_invoid = round(n/len(voids)) #n_invoid is now num of spheres in each void
 
@@ -400,16 +402,18 @@ def cic_stats_invoid(tree, n, r, minradV):
 
 #%%
 
-def cic_stats_invoid_jk(tree, n, r, minradV):
+def cic_stats_invoid_jk(voids, tree, n, r):
     """Returns Counts in Cells statistics
 
     Args:
+        voids (ascii Table): voidfile
         tree (ckdtree): coordinates
         voids (numpy array): voids data
         n (int): Num of spheres
         r (float): Radius of the spheres
         # seed (int, optional): Random seed. Defaults to 0.
-        minradV (float): minimum void radius
+        # voidsfile (string): voids file location
+        # minradV (float): minimum void radius
 
     Returns:
         float: VPF
@@ -417,30 +421,24 @@ def cic_stats_invoid_jk(tree, n, r, minradV):
         float: Averaged 2pcf (variance of counts in cells)
     """
     import numpy as np
-    from scipy import spatial
-    from astropy.io import ascii
+    #from scipy import spatial
+    #from astropy.io import ascii
 
-    voids = ascii.read('../data/tng300-1_voids.dat',\
-        names=['r','x','y','z','vx','vy','vz',\
-            'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
-    voids = voids[voids['r']>=minradV]
-    voids['r'] = voids['r']*1000
-    voids['x'] = voids['x']*1000
-    voids['y'] = voids['y']*1000
-    voids['z'] = voids['z']*1000
+    # voids = ascii.read(voidsfile,\
+    #     names=['r','x','y','z','vx','vy','vz',\
+    #         'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+    # voids = voids[voids['r']>=minradV]
+    # #print('N of voids:',len(voids))
+    # voids['r'] = voids['r']*1000
+    # voids['x'] = voids['x']*1000
+    # voids['y'] = voids['y']*1000
+    # voids['z'] = voids['z']*1000
 
 
     # Quiero 27 remuestreos JK (para que sea igual que el calculo de la VPF en el box,
     # donde tengo 27 remuestreos porque saco cubos de un tercio del largo de cada eje
     # del box (3**3=27) )
     jk = 27
-
-    # chi_jk = np.zeros((jk,len(voids)))
-    # NXi_jk = np.zeros((jk,len(voids)))
-
-    # P0_jk = np.zeros((jk,len(voids)))
-    # N_mean_jk = np.zeros((jk,len(voids)))
-    # xi_mean_jk = np.zeros((jk,len(voids)))
 
     chi_jk = np.zeros(jk)
     NXi_jk = np.zeros(jk)
@@ -468,7 +466,7 @@ def cic_stats_invoid_jk(tree, n, r, minradV):
 
         for nv in range(len(jkvoids)):
             spheres = uniform_sphereSampling(n_invoid,\
-                jkvoids[nv]['x'],jkvoids[nv]['y'],jkvoids[nv]['z'],jkvoids[nv]['r']-r)
+                jkvoids[nv]['x'],jkvoids[nv]['y'],jkvoids[nv]['z'],jkvoids[nv]['r'])
 
             ngal = np.zeros(n_invoid)
             for k in range(n_invoid):
