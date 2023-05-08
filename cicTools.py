@@ -354,6 +354,8 @@ def cic_stats_invoid(voids, tree, n, r):
     #from scipy import spatial
     #from astropy.io import ascii
 
+    #This section has been cut to the rvpf_jk code for efficiency
+    #-----------------------------------
     # voids = ascii.read(voidsfile,\
     #     names=['r','x','y','z','vx','vy','vz',\
     #         'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
@@ -364,13 +366,9 @@ def cic_stats_invoid(voids, tree, n, r):
     # voids['x'] = voids['x']*1000
     # voids['y'] = voids['y']*1000
     # voids['z'] = voids['z']*1000
+    #------------------------------------
 
-    n_invoid = round(n/len(voids)) #n_invoid is now num of spheres in each void
-
-    # a = 0
-    # b = lbox    
-    # (b - a) * random_sample() + a
-    # spheres = (b-a)*np.random.rand(n,3) + a
+    n_invoid = round(n/len(voids)) #n_invoid is now num of spheres in each voids
 
     chi = np.zeros(len(voids))
     NXi = np.zeros(len(voids))
@@ -424,15 +422,19 @@ def cic_stats_invoid_jk(voids, tree, n, r):
     #from scipy import spatial
     #from astropy.io import ascii
 
+    #This section has been cut to the rvpf_jk code for efficiency
+    #-----------------------------------
     # voids = ascii.read(voidsfile,\
     #     names=['r','x','y','z','vx','vy','vz',\
     #         'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+
     # voids = voids[voids['r']>=minradV]
-    # #print('N of voids:',len(voids))
+
     # voids['r'] = voids['r']*1000
     # voids['x'] = voids['x']*1000
     # voids['y'] = voids['y']*1000
     # voids['z'] = voids['z']*1000
+    #------------------------------------
 
 
     # Quiero 27 remuestreos JK (para que sea igual que el calculo de la VPF en el box,
