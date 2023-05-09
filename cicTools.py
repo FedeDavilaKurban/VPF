@@ -332,7 +332,7 @@ def uniform_sphereSampling(n,xv,yv,zv,R):
     return np.column_stack([x,y,z])
 
 #%%
-def cic_stats_invoid(voids, tree, n, r):
+def cic_stats_invoid(voids, tree, n, r_sph):
     """Returns Counts in Cells statistics
 
     Args:
@@ -340,7 +340,7 @@ def cic_stats_invoid(voids, tree, n, r):
         tree (ckdtree): coordinates
         voids (numpy array): voids data
         n (int): Num of spheres
-        r (float): Radius of the spheres
+        r_sph (float): Radius of the spheres
         # seed (int, optional): Random seed. Defaults to 0.
         voidsfile (string): voids file location
         minradV (float): minimum void radius
@@ -378,12 +378,13 @@ def cic_stats_invoid(voids, tree, n, r):
     xi_mean = np.zeros(len(voids))
 
     for nv in range(len(voids)):
+        print(voids[nv]['r']-r_sph)
         spheres = uniform_sphereSampling(n_invoid,\
-            voids[nv]['x'],voids[nv]['y'],voids[nv]['z'],voids[nv]['r'])
+            voids[nv]['x'],voids[nv]['y'],voids[nv]['z'],voids[nv]['r']-r_sph)
 
         ngal = np.zeros(n_invoid)
         for k in range(n_invoid):
-            ngal[k] = len(tree.query_ball_point(spheres[k],r))
+            ngal[k] = len(tree.query_ball_point(spheres[k],r_sph))
 
 
         P0[nv] = len(np.where(ngal==0)[0])/n_invoid
@@ -400,7 +401,7 @@ def cic_stats_invoid(voids, tree, n, r):
 
 #%%
 
-def cic_stats_invoid_jk(voids, tree, n, r):
+def cic_stats_invoid_jk(voids, tree, n, r_sph):
     """Returns Counts in Cells statistics
 
     Args:
@@ -408,7 +409,7 @@ def cic_stats_invoid_jk(voids, tree, n, r):
         tree (ckdtree): coordinates
         voids (numpy array): voids data
         n (int): Num of spheres
-        r (float): Radius of the spheres
+        r_sph (float): Radius of the spheres
         # seed (int, optional): Random seed. Defaults to 0.
         # voidsfile (string): voids file location
         # minradV (float): minimum void radius
@@ -468,11 +469,11 @@ def cic_stats_invoid_jk(voids, tree, n, r):
 
         for nv in range(len(jkvoids)):
             spheres = uniform_sphereSampling(n_invoid,\
-                jkvoids[nv]['x'],jkvoids[nv]['y'],jkvoids[nv]['z'],jkvoids[nv]['r'])
+                jkvoids[nv]['x'],jkvoids[nv]['y'],jkvoids[nv]['z'],jkvoids[nv]['r']-r_sph)
 
             ngal = np.zeros(n_invoid)
             for k in range(n_invoid):
-                ngal[k] = len(tree.query_ball_point(spheres[k],r))
+                ngal[k] = len(tree.query_ball_point(spheres[k],r_sph))
 
 
             P0_nv[nv] = len(np.where(ngal==0)[0])/n_invoid

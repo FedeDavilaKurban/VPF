@@ -202,22 +202,22 @@ else:
 print(chi, rs)
 
 #%%
-# x = np.geomspace(1E-2,1E3,50)
-# c='k'
-# #chi = -np.log(P0)/N_mean
-# #NE = N_mean*xi_mean
+x = np.geomspace(1E-2,1E3,50)
+c='k'
+#chi = -np.log(P0)/N_mean
+#NE = N_mean*xi_mean
 
-# plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
-# #a=.3
-# #plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
-# #plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
-# plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
-# #plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
-# # Q=1
-# # plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
+plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
+#a=.3
+#plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
+#plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
+plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
+#plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
+# Q=1
+# plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
 
-# plt.plot(NXi,chi,lw=2)
-# plt.xscale('log')
-# plt.legend(loc=3)
-# plt.show()
+plt.plot(NXi,chi,lw=2)
+plt.xscale('log')
+plt.legend(loc=3)
+plt.show()
 # %%
