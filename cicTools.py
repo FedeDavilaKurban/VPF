@@ -533,7 +533,7 @@ def delta_chi(chi,P0,P0err,N_mean,N_mean_std):
         N_mean_std(numpy array): uncertainty of N_mean calculated with JK resampling
 
     Returns:
-        aray: uncertainty of chi
+        array: uncertainty of chi
     """
     import numpy as np
 

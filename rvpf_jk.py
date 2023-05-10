@@ -94,28 +94,49 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 #     elif ngxs==10000000: rs = np.geomspace(300,3000,10) 
 #     elif ngxs==1000000: rs = np.geomspace(700,3500,10)
 
+#
+#-----------
+# Determine probing range
+#-----------
+#
+
 if completeRrange==False: 
     rs = np.geomspace(250,2500,rsbin) #Dejo esto para que tome algún valor en caso que invoid==False
     if invoid==True:
         if minradV==7.:
             rs = np.geomspace(250,2500,rsbin) 
         elif minradV==9.:
-            rs = np.geomspace(1500,6500,rsbin)
+            rs = np.geomspace(1500,4500,rsbin)
 
 if completeRrange==True: rs = np.geomspace(40,4000,rsbin)
 
 
+#
+#-----------
+# Read data from Illustris
+#-----------
+#
 gxs = readTNG(snap=snap,minmass=minmass)
 if ngxs!=0:
     np.random.seed(seed)
     ids = np.random.choice(len(gxs),size=int(len(gxs)*ngxs))
     gxs = gxs[ids]
 
+#
+#-----------
+# Replicate box edges periodically
+#-----------
+#
 print('Replicating box...')
 newgxs = perrep(gxs,lbox,np.max(rs))
 print(f'Num of original gxs in box: {len(gxs)}\n\
 Num of gxs after replication: {len(newgxs)}')
 
+#
+#-----------
+# Distant observer aproximation for z-space
+#-----------
+#
 if zspace == True:
     H0 = .06774
     axis = zspaceAxis
@@ -125,7 +146,11 @@ if zspace == True:
     newgxs[axis][np.where(newgxs[axis]>lbox)[0]]-=lbox
 
 
-
+#
+#-----------
+# VPF calculations
+#-----------
+#
 pos = np.column_stack((newgxs['x'],newgxs['y'],newgxs['z']))
 
 tree = spatial.cKDTree(pos)
@@ -188,18 +213,20 @@ if invoid == True:
             chi[i], NXi[i], P0[i], N_mean[i], xi_mean[i],\
                         = cic_stats_invoid(voids, tree, nesf, r)
 
-##########
-# Writing
-##########
 
-namefile += '.npz'
-print(f'Creating {namefile}')
-if jk!=0:
-    np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
-else:
-    np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
+#
+#-----------
+# Writing file
+#-----------
+#
+# namefile += '.npz'
+# print(f'Creating {namefile}')
+# if jk!=0:
+#     np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
+# else:
+#     np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
 
-print(chi, rs)
+# print(chi, rs)
 
 #%%
 x = np.geomspace(1E-2,1E3,50)
