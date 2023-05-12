@@ -22,6 +22,7 @@ completeRrange = config['PARAMS'].getboolean('completeRrange')
 snap = int(config['PARAMS']['snap']) #snapshot number
 minmass = float(config['PARAMS']['minmass']) #log number of minimum mass
 minradV = float(config['PARAMS']['minradV']) #minimum void radius
+voidfile = str(config['PARAMS']['voidfile'])
 
 print(f"""
       ngxs = {ngxs}
@@ -34,14 +35,26 @@ print(f"""
       snap = {snap}
       minmass = {minmass}
       minradV = {minradV}
+      voidfile = {voidfile}
       """)
+
+#
+#-----------
+# Print voids name file
+#-----------
+#
+
+if invoid==True:
+    if voidfile=='1e9': voidsfile='../data/tng300-1_voids.dat'
+    elif voidfile=='1e10': voidsfile='../data/voids_1e10.dat'
+    elif voidfile=='1e11': voidsfile='../data/voids_1e11.dat'
+    print('void file location:', voidsfile)
 
 #
 #-----------
 # Namefile
 #-----------
 #
-
 if ngxs!=0:
     namefile = f'../data/dilut{ngxs}_nesf{nesf}'
 else:
@@ -60,12 +73,13 @@ if minmass==0.:
     namefile+=f'_minMass1e10'
 elif minmass==1.:
     namefile+=f'_minMass1e11'
-namefile += f'_minradV{minradV}'
+if invoid==True:
+    if voidfile=='1e9': namefile+='_v1e9'
+    elif voidfile=='1e10': namefile+='_v1e10'
+    elif voidfile=='1e11': namefile+='_v1e11'
+    namefile += f'_minradV{minradV}'
 
-if minmass==-1.: voidsfile='../data/tng300-1_voids.dat'
-elif minmass==0.: voidsfile='../data/voids_1e10.dat'
-elif minmass==1.: voidsfile='../data/voids_1e11.dat'
-print('void file location:', voidsfile)
+
 
 
 #%%
@@ -99,16 +113,31 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 # Determine probing range
 #-----------
 #
+# if completeRrange==False: 
+#     rs = np.geomspace(250,2500,rsbin) #Dejo esto para que tome algún valor en caso que invoid==False
+#     if invoid==True:
+#         if minradV==7.:
+#             rs = np.geomspace(250,2500,rsbin) 
+#         elif minradV==9.:
+#             rs = np.geomspace(1500,4500,rsbin)
 
-if completeRrange==False: 
-    rs = np.geomspace(250,2500,rsbin) #Dejo esto para que tome algún valor en caso que invoid==False
-    if invoid==True:
-        if minradV==7.:
-            rs = np.geomspace(250,2500,rsbin) 
-        elif minradV==9.:
-            rs = np.geomspace(1500,4500,rsbin)
+# if completeRrange==True: rs = np.geomspace(40,4000,rsbin)
+if invoid==True:
 
-if completeRrange==True: rs = np.geomspace(40,4000,rsbin)
+    #Read Voids
+    voids = ascii.read(voidsfile,\
+        names=['r','x','y','z','vx','vy','vz',\
+            'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+    voids = voids[voids['r']>=minradV]
+    print('N of voids:',len(voids))
+    voids['r'] = voids['r']*1000 #Converts kpc to Mpc
+    voids['x'] = voids['x']*1000
+    voids['y'] = voids['y']*1000
+    voids['z'] = voids['z']*1000
+
+    maxrad = round(np.min(voids['r']))
+    rs = np.geomspace(maxrad/40.,maxrad/4.,rsbin)
+    print('rs:',rs)
 
 
 #
@@ -183,15 +212,18 @@ if invoid == False:
 
 if invoid == True:
 
-    voids = ascii.read(voidsfile,\
-        names=['r','x','y','z','vx','vy','vz',\
-            'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
-    voids = voids[voids['r']>=minradV]
-    print('N of voids:',len(voids))
-    voids['r'] = voids['r']*1000 #Converts kpc to Mpc
-    voids['x'] = voids['x']*1000
-    voids['y'] = voids['y']*1000
-    voids['z'] = voids['z']*1000
+    # Comentado porque lo copie al principio cuando defino 'rs'
+    # Guardado por las dudas
+    # ----------------------------------------------------------
+    # voids = ascii.read(voidsfile,\
+    #     names=['r','x','y','z','vx','vy','vz',\
+    #         'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+    # voids = voids[voids['r']>=minradV]
+    # print('N of voids:',len(voids))
+    # voids['r'] = voids['r']*1000 #Converts kpc to Mpc
+    # voids['x'] = voids['x']*1000
+    # voids['y'] = voids['y']*1000
+    # voids['z'] = voids['z']*1000
 
     if jk==3:
         chi_std = np.zeros(len(rs))
@@ -219,14 +251,14 @@ if invoid == True:
 # Writing file
 #-----------
 #
-# namefile += '.npz'
-# print(f'Creating {namefile}')
-# if jk!=0:
-#     np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
-# else:
-#     np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
+namefile += '.npz'
+print(f'Creating {namefile}')
+if jk!=0:
+    np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
+else:
+    np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
 
-# print(chi, rs)
+print(chi, rs)
 
 #%%
 x = np.geomspace(1E-2,1E3,50)

@@ -378,7 +378,7 @@ def cic_stats_invoid(voids, tree, n, r_sph):
     xi_mean = np.zeros(len(voids))
 
     for nv in range(len(voids)):
-        print(voids[nv]['r']-r_sph)
+        #print(voids[nv]['r']-r_sph)
         spheres = uniform_sphereSampling(n_invoid,\
             voids[nv]['x'],voids[nv]['y'],voids[nv]['z'],voids[nv]['r']-r_sph)
 
