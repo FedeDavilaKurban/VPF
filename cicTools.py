@@ -380,7 +380,7 @@ def cic_stats_invoid(voids, tree, n, r_sph):
     for nv in range(len(voids)):
         #print(voids[nv]['r']-r_sph)
         spheres = uniform_sphereSampling(n_invoid,\
-            voids[nv]['x'],voids[nv]['y'],voids[nv]['z'],voids[nv]['r']-r_sph)
+            voids[nv]['x'],voids[nv]['y'],voids[nv]['z'],voids[nv]['r'])
 
         ngal = np.zeros(n_invoid)
         for k in range(n_invoid):
@@ -469,7 +469,7 @@ def cic_stats_invoid_jk(voids, tree, n, r_sph):
 
         for nv in range(len(jkvoids)):
             spheres = uniform_sphereSampling(n_invoid,\
-                jkvoids[nv]['x'],jkvoids[nv]['y'],jkvoids[nv]['z'],jkvoids[nv]['r']-r_sph)
+                jkvoids[nv]['x'],jkvoids[nv]['y'],jkvoids[nv]['z'],jkvoids[nv]['r'])
 
             ngal = np.zeros(n_invoid)
             for k in range(n_invoid):

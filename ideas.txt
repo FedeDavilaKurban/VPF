@@ -17,3 +17,5 @@ un corte mayor (10**11-10**13Msun) y rellenar después.
 Dante argumenta que esos voids son voids de "dark galaxies", i.e., voids inobservables.
 Se podría en cualquier caso hacer un matching de abundancias con lo que observaría Euclid o LSST
 Pero los voids voids deberían ser identificados con 1e10 o 1e11
+
+-Considerar identificar voids en zspace
