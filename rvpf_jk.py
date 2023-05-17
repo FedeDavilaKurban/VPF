@@ -138,6 +138,8 @@ if invoid==True:
     maxrad = round(np.min(voids['r']))
     rs = np.geomspace(maxrad/40.,maxrad/4.,rsbin)
     print('rs:',rs)
+else:
+    rs = np.geomspace(40,4000,rsbin)
 
 
 #
