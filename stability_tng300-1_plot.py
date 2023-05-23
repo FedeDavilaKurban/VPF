@@ -16,6 +16,8 @@ gxs = readTNG()
 ntot = len(gxs)
 
 pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
+pos = pos[:round(len(pos)/10)]
+ntot = len(pos)
 
 tree = spatial.cKDTree(pos)
 print('N_tot=',ntot)
@@ -42,14 +44,14 @@ for i,n in enumerate(ns):
             chi_std[i], NXi_std[i], P0_std[i], N_mean_std[i], xi_mean_std[i] = cic_stats_jk(tree, n, r, lbox, jkbins=3)
 
 #%%
-namefile = '../data/stability_tng300-1_jk.npz'
+# namefile = '../data/stability_tng300-1_jk.npz'
 
-np.savez(namefile,chi, NXi, P0, N_mean, xi_mean, \
-    chi_std, NXi_std, P0_std, N_mean_std,xi_mean_std)
+# np.savez(namefile,chi, NXi, P0, N_mean, xi_mean, \
+#     chi_std, NXi_std, P0_std, N_mean_std,xi_mean_std)
 #%%
 fig = plt.figure(figsize=(6,9))
 ax1 = fig.add_subplot(311)
-ax2 = fig.add_subplot(312)
+ax2 = fig.add_subplot(312) 
 ax3 = fig.add_subplot(313)
 
 ax1.get_shared_x_axes().join(ax1, ax2, ax3)
@@ -99,7 +101,7 @@ ax1.set_xticklabels([])
 ax2.set_xticklabels([])
 
 plt.tight_layout()
-plt.savefig('../plots/stability_tng300.png')
+#plt.savefig('../plots/stability_tng300.png')
 plt.show()
 
 #%%
@@ -154,7 +156,7 @@ ax2.set_xticklabels([])
 
 ax1.set_title('TNG300-1')
 plt.tight_layout()
-plt.savefig('../plots/stability_tng300-1_jk.png')
+#plt.savefig('../plots/stability_tng300-1_jk.png')
 plt.show()
 
 # %%

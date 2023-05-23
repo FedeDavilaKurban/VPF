@@ -9,6 +9,9 @@ from astropy.io import ascii
 config = configparser.ConfigParser()
 config.read('config.ini')
 
+write = config['PARAMS'].getboolean('write') #write files with results
+plot = config['PARAMS'].getboolean('plot') #plot results for checking 
+
 seed = int(config['PARAMS']['seed']) #random seed
 lbox = float(config['PARAMS']['lbox']) #length of box
 ngxs = float(config['PARAMS']['ngxs']) #dilution
@@ -22,7 +25,8 @@ completeRrange = config['PARAMS'].getboolean('completeRrange')
 snap = int(config['PARAMS']['snap']) #snapshot number
 minmass = float(config['PARAMS']['minmass']) #log number of minimum mass
 minradV = float(config['PARAMS']['minradV']) #minimum void radius
-voidfile = str(config['PARAMS']['voidfile'])
+voidfile = str(config['PARAMS']['voidfile']) #location of voids file / which voids to use
+delta = str(config['PARAMS']['delta']) #delta used in void identification
 
 print(f"""
       ngxs = {ngxs}
@@ -43,11 +47,19 @@ print(f"""
 # Print voids name file
 #-----------
 #
-
 if invoid==True:
-    if voidfile=='1e9': voidsfile='../data/tng300-1_voids.dat'
-    elif voidfile=='1e10': voidsfile='../data/voids_1e10.dat'
-    elif voidfile=='1e11': voidsfile='../data/voids_1e11.dat'
+    if delta=='09':
+        if voidfile=='1e9': voidsfile='../data/tng300-1_voids.dat'
+        elif voidfile=='1e10': voidsfile='../data/voids_1e10.dat'
+        elif voidfile=='1e11': voidsfile='../data/voids_1e11.dat'
+    if delta=='08':
+        if voidfile=='1e9': voidsfile='../data/voids_1e9_08.dat'
+        elif voidfile=='1e10': voidsfile='../data/voids_1e10_08.dat'
+        elif voidfile=='1e11': voidsfile='../data/voids_1e11_08.dat'
+    if delta=='07':
+        if voidfile=='1e9': voidsfile='../data/tng300-1_voids_07.dat'
+        elif voidfile=='1e10': voidsfile='../data/voids_1e10_07.dat'
+        elif voidfile=='1e11': voidsfile='../data/voids_1e11_07.dat'
     print('void file location:', voidsfile)
 
 #
@@ -55,29 +67,32 @@ if invoid==True:
 # Namefile
 #-----------
 #
-if ngxs!=0:
-    namefile = f'../data/dilut{ngxs}_nesf{nesf}'
-else:
-    namefile = f'../data/allgxs_nesf{nesf}'
-if zspace==True: 
-    namefile += f'_redshift{zspaceAxis}'
-if invoid == True:
-    namefile+= '_invoid'
-if completeRrange == True:
-    namefile+='_allR'
-if jk!=0:
-    namefile += '_jk'
-if snap!=99:
-    namefile+=f'_snap{snap}'
-if minmass==0.:
-    namefile+=f'_minMass1e10'
-elif minmass==1.:
-    namefile+=f'_minMass1e11'
-if invoid==True:
-    if voidfile=='1e9': namefile+='_v1e9'
-    elif voidfile=='1e10': namefile+='_v1e10'
-    elif voidfile=='1e11': namefile+='_v1e11'
-    namefile += f'_minradV{minradV}'
+if write==True:
+    if ngxs!=0:
+        namefile = f'../data/dilut{ngxs}_nesf{nesf}'
+    else:
+        namefile = f'../data/allgxs_nesf{nesf}'
+    if zspace==True: 
+        namefile += f'_redshift{zspaceAxis}'
+    if invoid == True:
+        namefile+= '_invoid'
+    if completeRrange == True:
+        namefile+='_allR'
+    if jk!=0:
+        namefile += '_jk'
+    if snap!=99:
+        namefile+=f'_snap{snap}'
+    if minmass==0.:
+        namefile+=f'_minMass1e10'
+    elif minmass==1.:
+        namefile+=f'_minMass1e11'
+    if invoid==True:
+        if voidfile=='1e9': namefile+='_v1e9'
+        elif voidfile=='1e10': namefile+='_v1e10'
+        elif voidfile=='1e11': namefile+='_v1e11'
+        namefile += f'_minradV{minradV}'
+    if delta!='09':
+        namefile += f'_d{delta}'
 
 
 
@@ -141,6 +156,8 @@ if invoid==True:
 else:
     rs = np.geomspace(40,4000,rsbin)
 
+# rs = np.geomspace(1300,13000,rsbin)
+# print(rs)
 
 #
 #-----------
@@ -253,32 +270,34 @@ if invoid == True:
 # Writing file
 #-----------
 #
-namefile += '.npz'
-print(f'Creating {namefile}')
-if jk!=0:
-    np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
-else:
-    np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
+if write==True:
+    namefile += '.npz'
+    print(f'Creating {namefile}')
+    if jk!=0:
+        np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
+    else:
+        np.savez(namefile,chi,NXi,P0,N_mean,xi_mean,rs)
 
 print(chi, rs)
 
 #%%
-x = np.geomspace(1E-2,1E3,50)
-c='k'
-#chi = -np.log(P0)/N_mean
-#NE = N_mean*xi_mean
+if plot==True:
+    x = np.geomspace(1E-2,1E3,50)
+    c='k'
+    #chi = -np.log(P0)/N_mean
+    #NE = N_mean*xi_mean
 
-plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
-#a=.3
-#plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
-#plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
-plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
-#plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
-# Q=1
-# plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
+    plt.plot(x,np.log(1+x)/x,label='Negative Binomial',c=c)
+    #a=.3
+    #plt.plot(x,(1/((1-a)*(x/a)))*((1+x/a)**(1-a)-1),label='Generalized Hierarhichal',c=c,ls='--')
+    #plt.plot(x,(1-np.e**(-x))/x,label='Minimal')
+    plt.plot(x,(np.sqrt(1+2*x)-1)/x,label='Thermodynamical',c=c,ls='-.')
+    #plt.plot(x[:-15],1-x[:-15]/2,label='Gauss',c=c)
+    # Q=1
+    # plt.plot(x,1-(np.euler_gamma+np.log(4*Q*x))/(8*Q),label='BBGKY',c=c,ls=':')
 
-plt.plot(NXi,chi,lw=2)
-plt.xscale('log')
-plt.legend(loc=3)
-plt.show()
+    plt.plot(NXi,chi,lw=2)
+    plt.xscale('log')
+    plt.legend(loc=3)
+    plt.show()
 # %%
