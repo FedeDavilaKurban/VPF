@@ -27,6 +27,7 @@ minmass = float(config['PARAMS']['minmass']) #log number of minimum mass
 minradV = float(config['PARAMS']['minradV']) #minimum void radius
 voidfile = str(config['PARAMS']['voidfile']) #location of voids file / which voids to use
 delta = str(config['PARAMS']['delta']) #delta used in void identification
+voids_zs = config['PARAMS'].getboolean('voids_zs') #read voids identified in z-space
 
 print(f"""
       ngxs = {ngxs}
@@ -48,18 +49,25 @@ print(f"""
 #-----------
 #
 if invoid==True:
-    if delta=='09':
-        if voidfile=='1e9': voidsfile='../data/tng300-1_voids.dat'
-        elif voidfile=='1e10': voidsfile='../data/voids_1e10.dat'
-        elif voidfile=='1e11': voidsfile='../data/voids_1e11.dat'
-    if delta=='08':
-        if voidfile=='1e9': voidsfile='../data/voids_1e9_08.dat'
-        elif voidfile=='1e10': voidsfile='../data/voids_1e10_08.dat'
-        elif voidfile=='1e11': voidsfile='../data/voids_1e11_08.dat'
-    if delta=='07':
-        if voidfile=='1e9': voidsfile='../data/tng300-1_voids_07.dat'
-        elif voidfile=='1e10': voidsfile='../data/voids_1e10_07.dat'
-        elif voidfile=='1e11': voidsfile='../data/voids_1e11_07.dat'
+    if voids_zs==False:
+        if delta=='09':
+            if voidfile=='1e9': voidsfile='../data/tng300-1_voids.dat'
+            elif voidfile=='1e10': voidsfile='../data/voids_1e10.dat'
+            elif voidfile=='1e11': voidsfile='../data/voids_1e11.dat'
+        if delta=='08':
+            if voidfile=='1e9': voidsfile='../data/voids_1e9_08.dat'
+            elif voidfile=='1e10': voidsfile='../data/voids_1e10_08.dat'
+            elif voidfile=='1e11': voidsfile='../data/voids_1e11_08.dat'
+        if delta=='07':
+            if voidfile=='1e9': voidsfile='../data/voids_1e11_07.dat'
+            elif voidfile=='1e10': voidsfile='../data/voids_1e10_07.dat'
+            elif voidfile=='1e11': voidsfile='../data/voids_1e11_07.dat'
+    
+    elif voids_zs==True:
+        if delta=='09':
+            if voidfile=='1e9': voidsfile='../data/voids_zs_1e9_09.dat'
+            elif voidfile=='1e10': voidsfile='../data/voids_zs_1e10_09.dat'
+            elif voidfile=='1e11': voidsfile='../data/voids_zs_1e11_09.dat'
     print('void file location:', voidsfile)
 
 #
@@ -90,6 +98,7 @@ if write==True:
         if voidfile=='1e9': namefile+='_v1e9'
         elif voidfile=='1e10': namefile+='_v1e10'
         elif voidfile=='1e11': namefile+='_v1e11'
+        if voids_zs==True: namefile+='zs'
         namefile += f'_minradV{minradV}'
     if delta!='09':
         namefile += f'_d{delta}'
