@@ -49,7 +49,10 @@ print(f"""
 #-----------
 #
 if invoid==True:
-    if voids_zs==False:
+    #if voids_zs==False: 
+    # Comento esta linea y el elif de abajo porque estoy dejando implícito 
+    # que si zspace==True entonces leo los voids identificados en zspace
+    if zspace==False:
         if delta=='09':
             if voidfile=='1e9': voidsfile='../data/tng300-1_voids.dat'
             elif voidfile=='1e10': voidsfile='../data/voids_1e10.dat'
@@ -63,7 +66,8 @@ if invoid==True:
             elif voidfile=='1e10': voidsfile='../data/voids_1e10_07.dat'
             elif voidfile=='1e11': voidsfile='../data/voids_1e11_07.dat'
     
-    elif voids_zs==True:
+    #elif voids_zs==True:
+    elif zspace==True:
         if delta=='09':
             if voidfile=='1e9': voidsfile='../data/voids_zs_1e9_09.dat'
             elif voidfile=='1e10': voidsfile='../data/voids_zs_1e10_09.dat'

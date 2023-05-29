@@ -60,7 +60,7 @@ def readTNG(snap=99,minmass=-1.,maxmass=3.):
     Args:
         disk (string): where to read TNG. 'local' or 'mounted'
         snap (int): snapshot number
-        minmass, maxmass (float): log power of min/max mass thresholds (e.g.: -1 means 1E-9Mdot, 3 means 1E13Mdot)
+        minmass, maxmass (float): log10 of min/max mass thresholds (e.g.: -1 means 1E-9Mdot, 3 means 1E13Mdot)
             
     Returns:
         ascii Table: gxs (Position, Mass, Velocity)
