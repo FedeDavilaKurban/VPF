@@ -102,7 +102,7 @@ if write==True:
         if voidfile=='1e9': namefile+='_v1e9'
         elif voidfile=='1e10': namefile+='_v1e10'
         elif voidfile=='1e11': namefile+='_v1e11'
-        if voids_zs==True: namefile+='zs'
+        #if voids_zs==True: namefile+='zs'
         namefile += f'_minradV{minradV}'
     if delta!='09':
         namefile += f'_d{delta}'
@@ -165,7 +165,7 @@ if invoid==True:
 
     maxrad = round(np.min(voids['r']))
     rs = np.geomspace(maxrad/40.,maxrad/4.,rsbin)
-    print('rs:',rs)
+    #print('rs:',rs)
 else:
     rs = np.geomspace(40,4000,rsbin)
 
