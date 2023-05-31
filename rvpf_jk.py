@@ -72,6 +72,14 @@ if invoid==True:
             if voidfile=='1e9': voidsfile='../data/voids_zs_1e9_09.dat'
             elif voidfile=='1e10': voidsfile='../data/voids_zs_1e10_09.dat'
             elif voidfile=='1e11': voidsfile='../data/voids_zs_1e11_09.dat'
+        if delta=='08':
+            if voidfile=='1e9': voidsfile='../data/voids_zs_1e9_08.dat'
+            elif voidfile=='1e10': voidsfile='../data/voids_zs_1e10_08.dat'
+            elif voidfile=='1e11': voidsfile='../data/voids_zs_1e11_08.dat'
+        if delta=='07':
+            if voidfile=='1e9': voidsfile='../data/voids_zs_1e9_09.dat'
+            elif voidfile=='1e10': voidsfile='../data/voids_zs_1e10_07.dat'
+            elif voidfile=='1e11': voidsfile='../data/voids_zs_1e11_07.dat'
     print('void file location:', voidsfile)
 
 #

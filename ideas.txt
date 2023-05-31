@@ -18,4 +18,12 @@ Dante argumenta que esos voids son voids de "dark galaxies", i.e., voids inobser
 Se podría en cualquier caso hacer un matching de abundancias con lo que observaría Euclid o LSST
 Pero los voids voids deberían ser identificados con 1e10 o 1e11
 
--Considerar identificar voids en zspace
+- Considerar identificar voids en zspace #LISTO
+
+- IDEA/DISCUSION:La diferencia en el pico de las VPF en real space a distintos z ""PODRÍA"" deberse a la formación 
+de cáusticas en distintas escalas
+
+- IDEA: Plots real space z=0,1,2: podrían identificarse voids en esos redshifts con la delta correspondiente al modelo
+de expansión esférica -- voids hoy con delta 0.9 equivalen a voids en z=1 con delta 0.7 (verificar)
+
+- TAREA: queda recalcular los archivos con diluciones
