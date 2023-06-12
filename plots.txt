@@ -1,0 +1,81 @@
+Aca listo los plots de plots.ipynb por cuestiones de comodidad
+
+- Sin Titulo
+- =/= ngxs (real space)
+- =/= ngxs (zspace)
+- Redshifteo de los 3 ejes
+- Comparacion entre real y zspace
+- Comparacion entre distintos ngxs y realspace/zspace
+- Modificaciones al modelo teorico binomial negativo y ver si se apega a la chi en z space
+- Comparacion rspace v zspace para el box, allgxs (sin dilución)
+- Plotear con errores jk
+- VPF invoid
+- RVPFs Invoid/Box comparison
+- RVPFs Rspace/Zspace comparison
+- =/= allngxs invoid rspace
+- =/= allngxs invoid zspace
+- VPF invoid with JK errors
+- Dilución a 0.5 y a 0.25 en real space
+- Dilucion dentro y fuera de los voids
+- Plot 2x2 con diluciones en espacio real y redshift
+- Diferencias de las RVPFs respecto a los modelos
+- Todo junto
+- Plot grande en un solo espacio (z o real)
+- Igual pero zspace y rspace lado a lado
+- Diferencias de Chi en 4 paneles: zspace, rspace, invoid y box
+- Box en espacio real y zspace
+
+- Redshift Space - Plot 1: CiCstats vs R
+- Redshift Space - Plot 2: chi vs CiCstats
+- Redshift Space - Plot 2.5: Chi vs NE
+- Real Space - Plot 1: CiCstats vs R
+- Real Space - Plot 2: chi vs CiCstats
+- Real Space - Plot 2.5: Chi vs NE
+- Redshift Space - Plot 3:RVPF con diluciones
+- Real Space - Plot 3: RVPF con diluciones
+- Redshift Space Voids - Plot 1: CiCstats vs R
+- Redshift Space Voids - Plot 2: chi vs CiCstats
+- Redshift Space Voids - Plot 2.5: RVPF Invoid - Redshift Space
+- Redshift Space Voids - Plot 3: RVPF con diluciones
+- Real Space Voids - Plot 1: CiCstats vs R
+- Real Space Voids - Plot 2: chi vs CiCstats
+- Real Space Voids - Plot 2.5: RVPF Invoid
+- Real Space Voids - Plot 3: RVPF con diluciones
+- Real + Redshift Space - Plot 1: CiCstats vs R
+- Real + Redsfhit Space - Plot 2: chi vs CiCstats
+- Real + Redshift Space - Plot 2.5: chi vs NXi
+- Real + Redshift Space - Plot 3: RVPF con diluciones
+- Voids - Real + Redshift Space - Plot 1: CiCstats vs R
+- Voids - Real + Redsfhit Space - Plot 2: chi vs CiCstats
+- Voids - Real + Redsfhit Space - Plot 2.5: chi vs NXi
+- Voids - Real + Redsfhit Space - Plot 3: RVPF con diluciones
+- Comparaciones Finales - Plot 1: RVPF dentro y fuera de voids en rspace y zspace
+- Comparaciones Finales - Plot 2: RVPF en voids en real space + RVPF en box en rspace
+
+- Dark Matter RVPF, real y zspace - No error bars
+
+- Zspace - Box - z=0,1,2
+- Rspace - Box - z=0,1,2
+- Zspace - Voids - z=0,1,2
+- Rspace - Voids - z=0,1,2
+
+- Como varia la VPF en zspace con la masa de los trazadores
+- Ahora en Rspace
+
+- Condición r-R
+
+Fijo los voids identificados con 1e11 y radio min de 9Mpc
+- Como cambia la VPF fijando estos voids y cambiando la masa de los trazadores
+
+Ver como varia la VPF con el delta
+- Fijar real space, invoids, voids 1e11, gxs 1e9
+- Probando lo de las escalas
+- Sin título: igual pero en zspace
+
+- Mini pruebita de jk y no jk
+
+- VPF invoid con voids identificados en rspace vs zspace
+
+
+
+
