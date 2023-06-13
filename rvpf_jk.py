@@ -29,19 +29,31 @@ voidfile = str(config['PARAMS']['voidfile']) #location of voids file / which voi
 delta = str(config['PARAMS']['delta']) #delta used in void identification
 voids_zs = config['PARAMS'].getboolean('voids_zs') #read voids identified in z-space
 
-print(f"""
-      ngxs = {ngxs}
-      nesf = {nesf}
-      zspace = {zspace}
-      zspaceAxis = {zspaceAxis}
-      Num of JK resamplings = {jk}^3
-      invoid = {invoid}
-      completeRrange = {completeRrange}
-      snap = {snap}
-      minmass = {minmass}
-      minradV = {minradV}
-      voidfile = {voidfile}
-      """)
+if invoid==True:
+    print(f"""
+        ngxs = {ngxs}
+        nesf = {nesf}
+        zspace = {zspace}
+        zspaceAxis = {zspaceAxis}
+        Num of JK resamplings = {jk}^3
+        invoid = {invoid}
+        completeRrange = {completeRrange}
+        snap = {snap}
+        minmass = {minmass}
+        minradV = {minradV}
+        voidfile = {voidfile}
+        """)
+elif invoid==False:
+    print(f"""
+        ngxs = {ngxs}
+        nesf = {nesf}
+        zspace = {zspace}
+        zspaceAxis = {zspaceAxis}
+        Num of JK resamplings = {jk}^3
+        completeRrange = {completeRrange}
+        snap = {snap}
+        minmass = {minmass}
+        """)
 
 #
 #-----------
