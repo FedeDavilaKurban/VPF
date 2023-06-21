@@ -27,3 +27,6 @@ de cáusticas en distintas escalas
 de expansión esférica -- voids hoy con delta 0.9 equivalen a voids en z=1 con delta 0.7 (verificar)
 
 - TAREA: queda recalcular los archivos con diluciones
+
+- IDEA: Che no vaya a ser que lo que veo dentro de los voids sea solo por el muestreo del 
+volumen esférico. Podría hacer una prueba usando el script de la vpf invoid, pero dandole centros random 
