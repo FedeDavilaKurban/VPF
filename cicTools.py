@@ -482,22 +482,37 @@ def cic_stats_invoid_jk(voids, tree, n, r_sph):
                 /N_mean_nv[nv]**2
 
             chi_nv[nv] = -np.log(P0_nv[nv])/N_mean_nv[nv]
+            #if r_sph==2254.5: print(chi_nv[nv],P0_nv[nv],N_mean_nv[nv])
             NXi_nv[nv] = N_mean_nv[nv]*xi_mean_nv[nv]
 
-        chi_jk[i] = np.mean(chi_nv)
-        NXi_jk[i] = np.mean(NXi_nv)
-        P0_jk[i] = np.mean(P0_nv)
-        N_mean_jk[i] = np.mean(N_mean_nv)
-        xi_mean_jk[i] = np.mean(xi_mean_nv)
-        
+        # chi_jk[i] = np.mean(chi_nv)
+        # NXi_jk[i] = np.mean(NXi_nv)
+        # P0_jk[i] = np.mean(P0_nv)
+        # N_mean_jk[i] = np.mean(N_mean_nv)
+        # xi_mean_jk[i] = np.mean(xi_mean_nv)
+
+        chi_jk[i] = np.ma.masked_invalid(chi_nv).mean()
+        NXi_jk[i] = np.ma.masked_invalid(NXi_nv).mean()
+        P0_jk[i] = np.ma.masked_invalid(P0_nv).mean()
+        N_mean_jk[i] = np.ma.masked_invalid(N_mean_nv).mean()
+        xi_mean_jk[i] = np.ma.masked_invalid(xi_mean_nv).mean()
+
     
     del ngal
     
+    #print(chi_jk)
     chi = np.mean(chi_jk.flat)
+    #chi = np.ma.masked_invalid(chi_jk).mean()
+    #print(chi)
     NXi = np.mean(NXi_jk.flat)
     P0 = np.mean(P0_jk.flat)
     N_mean = np.mean(N_mean_jk.flat)
     xi_mean = np.mean(xi_mean_jk.flat)
+    # print('chi:',chi_jk)
+    # print('NXi:',NXi_jk)
+    # print('P0:',P0_jk)
+    # print('N_mean:', N_mean_jk)
+    # print('xi_mean:', xi_mean_jk)
 
     chi_std = np.std(chi_jk.flat,ddof=1)
     NXi_std = np.std(NXi_jk.flat,ddof=1)
