@@ -183,8 +183,10 @@ def cic_stats_jk(tree, n, r, lbox, jkbins):
     xi_mean = np.mean(xi_mean_jk.flat)
     xi_mean_std = np.std(xi_mean_jk.flat,ddof=1)
 
-    chi = np.mean(chi_jk.flat)
-    chi_std = np.std(chi_jk.flat,ddof=1)
+    # chi = np.mean(chi_jk.flat)
+    # chi_std = np.std(chi_jk.flat,ddof=1)
+    chi = np.ma.masked_invalid(chi_jk.flat).mean()
+    chi_std = np.ma.masked_invalid(chi_jk.flat).std(ddof=1)
 
     NXi = np.mean(NXi_jk.flat)
     NXi_std = np.std(NXi_jk.flat,ddof=1)
