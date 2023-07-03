@@ -36,3 +36,8 @@ volumen esférico. Podría hacer una prueba usando el script de la vpf invoid, p
 
 - IDEA: podríamos calcular la vpf en escalas mucho mayores, (e.g. con cumulos). Si da igual (se pega en zspace y no en rspace)
 es una prueba de que las velocidades lineales juegan un rol principal en los efectos que estamos viendo
+
+- TAREA: ver variacion de VPF con masa de trazadores *dentro de voids* (charla Fede Staz)
+
+- IDEA Fede Staz: ver como varia la VPF con la fracción de bariones en diferentes environments. Para ver historia de formacion
+de estrucura en dif ambientes
