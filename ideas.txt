@@ -31,13 +31,11 @@ de expansión esférica -- voids hoy con delta 0.9 equivalen a voids en z=1 con 
 - IDEA: Che no vaya a ser que lo que veo dentro de los voids sea solo por el muestreo del 
 volumen esférico. Podría hacer una prueba usando el script de la vpf invoid, pero dandole centros random 
 
-- IDEa texto: comentar que la curva tmb se pega a la NB inclusive cdo usamos voids identificados en real space con galaxias en z space.
+- IDEA texto: comentar que la curva tmb se pega a la NB inclusive cdo usamos voids identificados en real space con galaxias en z space.
 - Mencionar tmb que ya hicimos el calculo con voids identificados con m>10^9 y los resultados son iguales
 
 - IDEA: podríamos calcular la vpf en escalas mucho mayores, (e.g. con cumulos). Si da igual (se pega en zspace y no en rspace)
 es una prueba de que las velocidades lineales juegan un rol principal en los efectos que estamos viendo
-
-- TAREA: ver variacion de VPF con masa de trazadores *dentro de voids* (charla Fede Staz)
 
 - IDEA Fede Staz: ver como varia la VPF con la fracción de bariones en diferentes environments. Para ver historia de formacion
 de estrucura en dif ambientes

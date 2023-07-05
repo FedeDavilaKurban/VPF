@@ -118,6 +118,10 @@ if write==True:
         namefile+=f'_minMass1e10'
     elif minmass==1.:
         namefile+=f'_minMass1e11'
+    elif minmass==2.:
+        namefile+=f'_minMass1e12'
+    elif minmass not in [-1.,0.,1.,2.]:
+        raise Exception('Invalid minmass value')
     if invoid==True:
         if voidfile=='1e9': namefile+='_v1e9'
         elif voidfile=='1e10': namefile+='_v1e10'
