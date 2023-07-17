@@ -28,6 +28,7 @@ minradV = float(config['PARAMS']['minradV']) #minimum void radius
 voidfile = str(config['PARAMS']['voidfile']) #location of voids file / which voids to use
 delta = str(config['PARAMS']['delta']) #delta used in void identification
 voids_zs = config['PARAMS'].getboolean('voids_zs') #read voids identified in z-space
+evolDelta = config['PARAMS'].getboolean('evolDelta') #read voids identified with evolved integrated delta
 
 if invoid==True:
     print(f"""
@@ -41,6 +42,7 @@ if invoid==True:
         snap = {snap}
         minmass = {minmass}
         minradV = {minradV}
+        evolDelta = {evolDelta}
         voidfile = {voidfile}
         """)
 elif invoid==False:
@@ -65,19 +67,23 @@ if invoid==True:
     # Comento esta linea y el elif de abajo porque estoy dejando implícito 
     # que si zspace==True entonces leo los voids identificados en zspace
     if zspace==False:
-        if delta=='09':
-            if voidfile=='1e9': voidsfile='../data/tng300-1_voids.dat'
-            elif voidfile=='1e10': voidsfile='../data/voids_1e10.dat'
-            elif voidfile=='1e11': voidsfile='../data/voids_1e11.dat'
-        if delta=='08':
-            if voidfile=='1e9': voidsfile='../data/voids_1e9_08.dat'
-            elif voidfile=='1e10': voidsfile='../data/voids_1e10_08.dat'
-            elif voidfile=='1e11': voidsfile='../data/voids_1e11_08.dat'
-        if delta=='07':
-            if voidfile=='1e9': voidsfile='../data/voids_1e11_07.dat'
-            elif voidfile=='1e10': voidsfile='../data/voids_1e10_07.dat'
-            elif voidfile=='1e11': voidsfile='../data/voids_1e11_07.dat'
-    
+        if evolDelta==False:
+            if delta=='09':
+                if voidfile=='1e9': voidsfile='../data/tng300-1_voids.dat'
+                elif voidfile=='1e10': voidsfile='../data/voids_1e10.dat'
+                elif voidfile=='1e11': voidsfile='../data/voids_1e11.dat'
+            if delta=='08':
+                if voidfile=='1e9': voidsfile='../data/voids_1e9_08.dat'
+                elif voidfile=='1e10': voidsfile='../data/voids_1e10_08.dat'
+                elif voidfile=='1e11': voidsfile='../data/voids_1e11_08.dat'
+            if delta=='07':
+                if voidfile=='1e9': voidsfile='../data/voids_1e11_07.dat'
+                elif voidfile=='1e10': voidsfile='../data/voids_1e10_07.dat'
+                elif voidfile=='1e11': voidsfile='../data/voids_1e11_07.dat'
+        if evolDelta==True:
+            if voidfile!='1e11': raise Exception('Voids not identified with evolved delta for this "voidfile" value')
+            voidsfile = f'../data/voids_1e11_snap{snap}.dat'
+
     #elif voids_zs==True:
     elif zspace==True:
         if delta=='09':
@@ -123,11 +129,18 @@ if write==True:
     elif minmass not in [-1.,0.,1.,2.]:
         raise Exception('Invalid minmass value')
     if invoid==True:
-        if voidfile=='1e9': namefile+='_v1e9'
-        elif voidfile=='1e10': namefile+='_v1e10'
-        elif voidfile=='1e11': namefile+='_v1e11'
-        #if voids_zs==True: namefile+='zs'
-        namefile += f'_minradV{minradV}'
+        if evolDelta==False:
+            if voidfile=='1e9': namefile+='_v1e9'
+            elif voidfile=='1e10': namefile+='_v1e10'
+            elif voidfile=='1e11': namefile+='_v1e11'
+            #if voids_zs==True: namefile+='zs'
+            namefile += f'_minradV{minradV}'
+        if evolDelta==True:
+            if voidfile=='1e11': 
+                namefile+='_v1e11EvolDelta'
+            else: 
+                raise Exception('Voids not identified with evolved delta for this "voidfile" value')
+            namefile += f'_minradV{minradV}'
     if delta!='09':
         namefile += f'_d{delta}'
 
@@ -177,9 +190,15 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 if invoid==True:
 
     #Read Voids
-    voids = ascii.read(voidsfile,\
-        names=['r','x','y','z','vx','vy','vz',\
-            'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+    if 'snap' in voidsfile: #If 'snap' is in 'voidsfile' it is reading voids id'd with evolved delta
+        voids = ascii.read(voidsfile,\
+            names=['r','x','y','z','vx','vy','vz',\
+                'deltaint_1r','maxdeltaint_2-3r'])
+
+    else:
+        voids = ascii.read(voidsfile,\
+            names=['r','x','y','z','vx','vy','vz',\
+                'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
     voids = voids[voids['r']>=minradV]
     print('N of voids:',len(voids))
     voids['r'] = voids['r']*1000 #Converts kpc to Mpc
@@ -212,7 +231,7 @@ if ngxs!=0:
 # Replicate box edges periodically
 #-----------
 #
-print('Replicating box...')
+print('Replicating box:')
 newgxs = perrep(gxs,lbox,np.max(rs))
 print(f'Num of original gxs in box: {len(gxs)}\n\
 Num of gxs after replication: {len(newgxs)}')
