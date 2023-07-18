@@ -59,9 +59,9 @@ Aca listo los plots de plots.ipynb por cuestiones de comodidad
 - Zspace - Voids - z=0,0.5,1,2
 - Rspace - Voids - z=0,0.5,1,2
 - Idem pero con voids identificados con delta evolucionada
--
- Como varia la VPF en zspace con la masa de los trazadores
-- Ahora en Rspace
+
+- Como varia la VPF invoid en zspace con la masa de los trazadores de voids
+- Idem en Rspace
 
 - Condición r-R
 

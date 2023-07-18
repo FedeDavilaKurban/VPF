@@ -143,6 +143,9 @@ if write==True:
             namefile += f'_minradV{minradV}'
     if delta!='09':
         namefile += f'_d{delta}'
+    namefile += '.npz'
+
+    print('Filename to be created:',namefile)
 
 
 
@@ -327,7 +330,6 @@ if invoid == True:
 #-----------
 #
 if write==True:
-    namefile += '.npz'
     print(f'Creating {namefile}')
     if jk!=0:
         np.savez(namefile,chi,chi_std,NXi,NXi_std,P0,P0_std,N_mean,N_mean_std,xi_mean,xi_mean_std,rs)
