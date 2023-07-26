@@ -197,15 +197,26 @@ rs range for ngxs=1000000: np.geomspace(200,5000,x)
 if invoid==True:
 
     #Read Voids
-    if 'snap' in voidsfile: #If 'snap' is in 'voidsfile' it is reading voids id'd with evolved delta
+    # if 'snap' in voidsfile: #If 'snap' is in 'voidsfile' it is reading voids id'd with evolved delta
+    #     voids = ascii.read(voidsfile,\
+    #         names=['r','x','y','z','vx','vy','vz',\
+    #             'deltaint_1r','maxdeltaint_2-3r'])
+
+    # else:
+    #     voids = ascii.read(voidsfile,\
+    #         names=['r','x','y','z','vx','vy','vz',\
+    #             'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+
+    try:
+        voids = ascii.read(voidsfile,\
+            names=['r','x','y','z','vx','vy','vz',\
+                'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+    except:
         voids = ascii.read(voidsfile,\
             names=['r','x','y','z','vx','vy','vz',\
                 'deltaint_1r','maxdeltaint_2-3r'])
 
-    else:
-        voids = ascii.read(voidsfile,\
-            names=['r','x','y','z','vx','vy','vz',\
-                'deltaint_1r','maxdeltaint_2-3r','log10Poisson','Nrecenter'])
+
     voids = voids[voids['r']>=minradV]
     print('N of voids:',len(voids))
     voids['r'] = voids['r']*1000 #Converts kpc to Mpc
