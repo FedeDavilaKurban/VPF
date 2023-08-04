@@ -24,7 +24,7 @@ Pero los voids voids deberían ser identificados con 1e10 o 1e11
 de cáusticas en distintas escalas
 
 - IDEA: Plots real space z=0,1,2: podrían identificarse voids en esos redshifts con la delta correspondiente al modelo
-de expansión esférica -- voids hoy con delta 0.9 equivalen a voids en z=1 con delta 0.7 (verificar)
+de expansión esférica -- voids hoy con delta 0.9 equivalen a voids en z=1 con delta 0.7 (verificar) #LISTO
 
 - TAREA: queda recalcular los archivos con diluciones
 
@@ -39,3 +39,6 @@ es una prueba de que las velocidades lineales juegan un rol principal en los efe
 
 - IDEA Fede Staz: ver como varia la VPF con la fracción de bariones en diferentes environments. Para ver historia de formacion
 de estrucura en dif ambientes
+
+- TEXTO: conclusiones: no esta mal señalar que los resultados son consistentes con que los voids son universos menos evolucionados etc etc
+usando herramientas alternativas como la vpf
