@@ -66,6 +66,7 @@ def readTNG(snap=99,minmass=-1.,maxmass=3.):
         ascii Table: gxs (Position, Mass, Velocity)
 
     """
+    import os
     import sys
     illustrisPath = '/home/fdavilakurban/'
     #if disk=='local':
@@ -78,7 +79,20 @@ def readTNG(snap=99,minmass=-1.,maxmass=3.):
     from astropy.table import Table
     import random 
     
-    mass = il.groupcat.loadSubhalos(basePath,snap,fields=['SubhaloMass'])                                                                                                                      
+    try:
+        mass = il.groupcat.loadSubhalos(basePath,snap,fields=['SubhaloMass'])
+    except FileNotFoundError: 
+        os.system(f'mkdir {basePath}groups_{snap:03}')
+        os.system(f'sshfs fdavilakurban@clemente:/mnt/simulations/illustris/TNG300-1/groups_{snap:03}/ ../../../TNG300-1/output/groups_{snap:03}/')
+    except FileExistsError:               
+        os.system(f'sshfs fdavilakurban@clemente:/mnt/simulations/illustris/TNG300-1/groups_{snap:03}/ ../../../TNG300-1/output/groups_{snap:03}/')
+    finally: 
+        mass = il.groupcat.loadSubhalos(basePath,snap,fields=['SubhaloMass'])
+  
+    #except:
+    #    os.system(f'sshfs fdavilakurban@clemente:/mnt/simulations/illustris/TNG300-1/\
+    #              groups_{snap:03}/ ../../../TNG300-1/output/groups_{snap:03}/')
+                                                                                           
     ids = np.where((np.log10(mass)>minmass)&(np.log10(mass)<maxmass))
     mass = mass[ids]
 
