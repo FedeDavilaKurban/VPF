@@ -23,7 +23,8 @@ jk = int(config['PARAMS']['jk']) #num of bins of r
 invoid = config['PARAMS'].getboolean('invoid') #redshift space
 completeRrange = config['PARAMS'].getboolean('completeRrange')
 snap = int(config['PARAMS']['snap']) #snapshot number
-minmass = float(config['PARAMS']['minmass']) #log number of minimum mass
+minmass = float(config['PARAMS']['minmass']) #log10 of minimum mass
+maxmass = float(config['PARAMS']['maxmass']) #log10 of maximum mass 
 minradV = float(config['PARAMS']['minradV']) #minimum void radius
 voidfile = str(config['PARAMS']['voidfile']) #location of voids file / which voids to use
 delta = str(config['PARAMS']['delta']) #delta used in void identification
@@ -41,6 +42,7 @@ if invoid==True:
         completeRrange = {completeRrange}
         snap = {snap}
         minmass = {minmass}
+        maxmass = {maxmass}
         minradV = {minradV}
         evolDelta = {evolDelta}
         voidfile = {voidfile}
@@ -114,24 +116,45 @@ if write==True:
         namefile = f'../data/dilut{ngxs}_nesf{nesf}'
     else:
         namefile = f'../data/allgxs_nesf{nesf}'
+
     if zspace==True: 
         namefile += f'_redshift{zspaceAxis}'
+
     if invoid == True:
         namefile+= '_invoid'
+
     if completeRrange == True:
         namefile+='_allR'
+
     if jk!=0:
         namefile += '_jk'
+
     if snap!=99:
         namefile+=f'_snap{snap}'
+
     if minmass==0.:
         namefile+=f'_minMass1e10'
     elif minmass==1.:
         namefile+=f'_minMass1e11'
     elif minmass==2.:
         namefile+=f'_minMass1e12'
-    elif minmass not in [-1.,0.,1.,2.]:
+    elif minmass==-1.5:
+        namefile+=f'_minMass1e8.5'
+    elif minmass==-2.:
+        namefile+=f'_minMass1e8'
+    elif minmass not in [-2,-1.5,-1.,0.,1.,2.]:
         raise Exception('Invalid minmass value')
+    
+    if maxmass!=3.:
+        if maxmass==2.:
+            namefile+='_maxMass1e12'
+        elif maxmass==1.:
+            namefile+='_maxMass1e11'
+        elif maxmass==0.:
+            namefile+='_maxMass1e10'
+        elif minmass not in [0.,1.,2.]:
+            raise Exception('Invalid "maxmass" value')
+
     if invoid==True:
         if evolDelta==False:
             if voidfile=='1e9': namefile+='_v1e9'
@@ -145,8 +168,10 @@ if write==True:
             else: 
                 raise Exception('Voids not identified with evolved delta for this "voidfile" value')
             namefile += f'_minradV{minradV}'
+
     if delta!='09':
         namefile += f'_d{delta}'
+
     namefile += '.npz'
 
     print('Filename to be created:',namefile)

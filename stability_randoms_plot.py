@@ -4,19 +4,19 @@ import matplotlib.pyplot as plt
 from cicTools import cic_stats, cic_stats_jk
 from scipy import spatial
 #%%
-r = .004
-lbox = 1
-nran = 10000000
+r = 800
+lbox = 205000
+nran = 13333606
 seed = 818237
 np.random.seed(seed)
-ranpos = np.random.rand(nran,3)
+ranpos = float(lbox)*np.random.rand(nran,3)
 ran_tree = spatial.cKDTree(ranpos)
 print('N_tot = ',nran)
 print('Mean interparticle distance:',nran**(-1/3))
 print('Wigner-Seitz radius:',(3/(4*np.pi*nran))**(1/3))
 print('Testing radius:',r)
 
-ns = np.geomspace(10,1000000,30).astype(int)
+ns = np.geomspace(100,1000000,10).astype(int)
 
 P0 = np.zeros(len(ns))
 N_mean = np.zeros(len(ns))
@@ -94,6 +94,7 @@ plt.show()
 #
 #Estos son los plots con JK
 #
+import matplotlib.pyplot as plt
 
 from cicTools import delta_P0
 
@@ -114,7 +115,7 @@ NXi_std = stats['arr_6']
 P0_std = stats['arr_7']
 N_mean_std = stats['arr_8']
 xi_mean_std = stats['arr_9']
-ns = np.geomspace(10,1000000,30).astype(int)
+#ns = np.geomspace(10,1000000,30).astype(int)
 
 P0err = delta_P0(P0,ns)
 
@@ -129,7 +130,7 @@ plt.rcParams['font.size'] = 14
 """
 Nmean
 """
-N_mean_analytical = nran*(4*np.pi*r**3/3)/(lbox+r)**3
+N_mean_analytical = nran*(4*np.pi*r**3/3)/(lbox)**3
 ax1.hlines(N_mean_analytical,np.min(ns),np.max(ns),ls=':',color='k')
 ax1.errorbar(ns,N_mean,yerr=N_mean_std,marker='o',capsize=3)
 #ax1.plot(ns,N_mean)
@@ -144,7 +145,9 @@ ax1.set_xscale('log')
 """
 P0
 """
+P0_ran = np.exp(-(nran/lbox**3)*(4./3.)*np.pi*r**3) #theoretical value of P0 for poisson dist.
 ax2.errorbar(ns,P0,yerr=P0err,marker='o',capsize=3)
+ax2.hlines(P0_ran,np.min(ns),np.max(ns),ls=':',color='k')
 
 ax2.set_ylabel(r'$P_0$')
 ax2.set_xscale('log')

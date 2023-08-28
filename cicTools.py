@@ -104,7 +104,8 @@ def readTNG(snap=99,minmass=-1.,maxmass=3.):
 
 
     #gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2],mass]),names=['x','y','z','mass'])    
-    gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2],vel[:,0],vel[:,1],vel[:,2]]),names=['x','y','z','vx','vy','vz'])    
+    gxs = Table(np.column_stack([pos[:,0],pos[:,1],pos[:,2],vel[:,0],vel[:,1],vel[:,2]]),\
+                            names=['x','y','z','vx','vy','vz'])    
     
     del mass,pos,vel
 
