@@ -1,7 +1,5 @@
 
 #%%
-#from errno import EKEYREJECTED
-
 
 def cic_stats(tree, n, r, lbox):
     """Returns Counts in Cells statistics
