@@ -480,6 +480,7 @@ def cic_stats_invoid_jk(voids, tree, n, r_sph):
         N_mean_nv = np.zeros(len(jkvoids))
         xi_mean_nv = np.zeros(len(jkvoids))
 
+        #commented because i define it previously in rvpf_jk.py 
         n_invoid = round(n/len(jkvoids)) #n_invoid is num of spheres in each void
 
         for nv in range(len(jkvoids)):

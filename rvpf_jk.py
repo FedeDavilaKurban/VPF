@@ -21,7 +21,7 @@ nesf = int(config['PARAMS']['nesf']) #num of test spheres
 rsbin = int(config['PARAMS']['rsbin']) #num of bins of r
 jk = int(config['PARAMS']['jk']) #num of bins of r
 invoid = config['PARAMS'].getboolean('invoid') #redshift space
-completeRrange = config['PARAMS'].getboolean('completeRrange')
+#completeRrange = config['PARAMS'].getboolean('completeRrange')
 snap = int(config['PARAMS']['snap']) #snapshot number
 minmass = float(config['PARAMS']['minmass']) #log10 of minimum mass
 maxmass = float(config['PARAMS']['maxmass']) #log10 of maximum mass 
@@ -39,7 +39,6 @@ if invoid==True:
         zspaceAxis = {zspaceAxis}
         Num of JK resamplings = {jk}^3
         invoid = {invoid}
-        completeRrange = {completeRrange}
         snap = {snap}
         minmass = {minmass}
         maxmass = {maxmass}
@@ -54,7 +53,6 @@ elif invoid==False:
         zspace = {zspace}
         zspaceAxis = {zspaceAxis}
         Num of JK resamplings = {jk}^3
-        completeRrange = {completeRrange}
         snap = {snap}
         minmass = {minmass}
         """)
@@ -123,8 +121,8 @@ if write==True:
     if invoid == True:
         namefile+= '_invoid'
 
-    if completeRrange == True:
-        namefile+='_allR'
+    #if completeRrange == True:
+    #    namefile+='_allR'
 
     if jk!=0:
         namefile += '_jk'
@@ -244,19 +242,29 @@ if invoid==True:
 
     voids = voids[voids['r']>=minradV]
     print('N of voids:',len(voids))
-    voids['r'] = voids['r']*1000 #Converts kpc to Mpc
+    voids['r'] = voids['r']*1000 #Converts Mpc to kpc
     voids['x'] = voids['x']*1000
     voids['y'] = voids['y']*1000
     voids['z'] = voids['z']*1000
 
-    maxrad = round(np.min(voids['r']))
-    rs = np.geomspace(maxrad/40.,maxrad/4.,rsbin)
-    #print('rs:',rs)
+    # r_max:= maximum probing radius
+    # Rv:= void radius
+    # N_esf,v:= minimum number of probing spheres per void
+    # r_max = Rv/N_esf,v
+
+    n_invoid = int(nesf/len(voids))
+    r_max = minradV*1000/n_invoid**(1./3)
+    rs = np.geomspace(250.,r_max,rsbin)
+
+
+    # minrad = round(np.min(voids['r']))
+    # rs = np.geomspace(minrad/40.,minrad/4.,rsbin)
+    # print('rs:',rs)
 else:
     rs = np.geomspace(40,4000,rsbin)
 
 # rs = np.geomspace(1300,13000,rsbin)
-# print(rs)
+print('rs:',rs)
 
 #
 #-----------
