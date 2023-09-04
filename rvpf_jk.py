@@ -254,7 +254,7 @@ if invoid==True:
 
     n_invoid = int(nesf/len(voids))
     r_max = minradV*1000/n_invoid**(1./3)
-    rs = np.geomspace(250.,r_max,rsbin)
+    rs = np.geomspace(200.,r_max,rsbin)
 
 
     # minrad = round(np.min(voids['r']))
