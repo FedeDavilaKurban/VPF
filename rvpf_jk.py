@@ -250,10 +250,10 @@ if invoid==True:
     # r_max:= maximum probing radius
     # Rv:= void radius
     # N_esf,v:= minimum number of probing spheres per void
-    # r_max = Rv/N_esf,v
+    # r_max = Rv/(N_esf,v)**(1/3)
 
     n_invoid = int(nesf/len(voids))
-    r_max = minradV*1000/n_invoid**(1./3)
+    r_max = minradV*1000/(n_invoid/.64)**(1./3)
     rs = np.geomspace(200.,r_max,rsbin)
 
 
