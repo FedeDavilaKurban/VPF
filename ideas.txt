@@ -42,3 +42,6 @@ de estrucura en dif ambientes
 
 - TEXTO: conclusiones: no esta mal señalar que los resultados son consistentes con que los voids son universos menos evolucionados etc etc
 usando herramientas alternativas como la vpf
+
+- TEXTO: conclusiones: Polaco me dice que edntro de los voids la xi no tiene termino de dos halos. Se podria mencionar esto
+en relacion con la vpf como en Tinker2008 
