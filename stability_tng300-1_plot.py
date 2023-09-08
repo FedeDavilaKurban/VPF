@@ -16,7 +16,7 @@ gxs = readTNG()
 ntot = len(gxs)
 
 pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
-pos = pos[:round(len(pos)/10)]
+pos = pos[:round(len(pos)*.006)]
 ntot = len(pos)
 
 tree = spatial.cKDTree(pos)
@@ -25,7 +25,7 @@ print('Mean interparticle distance:',(V/ntot)**(1/3))
 print('Wigner-Seitz radius:',(3*V/(4*np.pi*ntot))**(1/3))
 print('Testing radius:',r)
 
-ns = np.geomspace(10,1000000,30).astype(int)
+ns = np.geomspace(10,1000000,5).astype(int)
 
 P0 = np.zeros(len(ns))
 N_mean = np.zeros(len(ns))
@@ -108,9 +108,9 @@ plt.show()
 #
 #Estos son los plots con JK
 #
-r = 800
-lbox = 205000
-V = lbox**3
+# r = 800
+# lbox = 205000
+# V = lbox**3
 
 fig= plt.figure(figsize=(6,9))
 ax1 = fig.add_subplot(311)
