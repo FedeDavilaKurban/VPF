@@ -5,7 +5,7 @@ from cicTools import *
 from scipy import spatial
 import random 
 
-r = 800
+r = 7000
 lbox = 205000
 V = lbox**3
 
@@ -16,8 +16,9 @@ gxs = readTNG()
 ntot = len(gxs)
 
 pos = np.column_stack((gxs['x'],gxs['y'],gxs['z']))
-pos = pos[:round(len(pos)*.006)]
+pos = pos[:round(len(pos)*.0015)]
 ntot = len(pos)
+print()
 
 tree = spatial.cKDTree(pos)
 print('N_tot=',ntot)
@@ -25,7 +26,7 @@ print('Mean interparticle distance:',(V/ntot)**(1/3))
 print('Wigner-Seitz radius:',(3*V/(4*np.pi*ntot))**(1/3))
 print('Testing radius:',r)
 
-ns = np.geomspace(10,1000000,5).astype(int)
+ns = np.geomspace(100,10000,10).astype(int)
 
 P0 = np.zeros(len(ns))
 N_mean = np.zeros(len(ns))
