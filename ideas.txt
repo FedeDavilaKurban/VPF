@@ -1,31 +1,38 @@
-- Diluir N #LISTO
+#LISTO
+- Diluir N 
 El plot de mi charla en la Cosmic Web parece indicar que dentro
 del void el clustering es jerárquico, pero afuera no
 
-- Calcualr VPF con cortes en masa #LISTO
+#LISTO
+- Calcualr VPF con cortes en masa 
 Las gxs dentro de los voids son mayoritatiamente de baja masa.
 Si estas gxs tienen un clustering distinto a las de baja masa 
 en todo el box, entonces hay algo especial en los voids que mantiene
 la jerarquía de clustering
 
-- Calcular VPF con distintas definiciones de void #LISTO
+#LISTO
+- Calcular VPF con distintas definiciones de void 
 Identificar voids con todas las gxs (10**9-10**13Msun) y con 
-un corte mayor (10**11-10**13Msun) y rellenar después.
+un corte mayor (10**11-10**13Msun) y rellenar después. 
 - Comparar con DM para tener insight respecto del bias
 
-- Desechar las identificaciones de voids con tracers de M>1e9 y M>1e12 #LISTO
+#LISTO
+- Desechar las identificaciones de voids con tracers de M>1e9 y M>1e12 
 Dante argumenta que esos voids son voids de "dark galaxies", i.e., voids inobservables.
 Se podría en cualquier caso hacer un matching de abundancias con lo que observaría Euclid o LSST
 Pero los voids voids deberían ser identificados con 1e10 o 1e11
 
-- Considerar identificar voids en zspace #LISTO
+#LISTO
+- Considerar identificar voids en zspace 
 
 - IDEA/DISCUSION:La diferencia en el pico de las VPF en real space a distintos z ""PODRÍA"" deberse a la formación 
 de cáusticas en distintas escalas
 
+ #LISTO
 - IDEA: Plots real space z=0,1,2: podrían identificarse voids en esos redshifts con la delta correspondiente al modelo
-de expansión esférica -- voids hoy con delta 0.9 equivalen a voids en z=1 con delta 0.7 (verificar) #LISTO
+de expansión esférica -- voids hoy con delta 0.9 equivalen a voids en z=1 con delta 0.7 (verificar)
 
+#LISTO
 - TAREA: queda recalcular los archivos con diluciones
 
 - IDEA: Che no vaya a ser que lo que veo dentro de los voids sea solo por el muestreo del 
